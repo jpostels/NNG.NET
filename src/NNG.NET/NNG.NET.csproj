@@ -4,4 +4,17 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Native\InteropTypes\" />
+    <Folder Include="runtimes\linux-x64\native\" />
+    <Folder Include="runtimes\linux-x86\native\" />
+    <Folder Include="runtimes\win-x86\native\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="runtimes\win-x64\native\nng.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>
