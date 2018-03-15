@@ -1,2 +1,4 @@
 # NNG.NET
-A .NET Core Wrapper for nng (see https://github.com/nanomsg/nng)
+NNG.NET is a .NET Core binding for [nng](https://github.com/nanomsg/nng). 
+For detailed documentation about nng please refer to [https://nanomsg.github.io/nng/man/index.html](https://nanomsg.github.io/nng/man/index.html)
+
