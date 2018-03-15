@@ -1,40 +1,24 @@
+image: Visual Studio 2017 Preview
+
+build:
+  project: NNG.NET.sln
+  verbosity: minimal
+  
 # configuration for "master" branch
 # build in Release mode and deploy to nuget
--
-  branches:
-    only:
-      - master
+branches:
+  only:
+    - master
+    - develop
+    - /feature\/.*/
+    - /bugfix\/.*/
+    - /hotfix\/.*/
+    - /release\/.*/
 
-  configuration: Release
+configuration: Release
 
-# configuration for "develop" branch
-# build in Release mode
--
-  branches:
-    only:
-      - master
-
-  configuration: Release
-
-  
-# configuration for all branches starting from "feature//"
-# build in Debug mode
--
-  branches:
-    only:
-      - /feature\/.*/
-
-  configuration: Debug
-
-# "fall back" configuration for all other branches
-# no "branches" section defined
-# do not deploy at all
--
-  configuration: Debug
-  
 test:
-  # only assemblies to test
+# only assemblies to test
   assemblies:
     only:
-      - test-assembly-A.dll
       - '**\*Tests.dll'
