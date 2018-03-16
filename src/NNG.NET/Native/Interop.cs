@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using NNG.Native.Windows;
 
 namespace NNG.Native
 {
@@ -9,9 +10,6 @@ namespace NNG.Native
     /// </summary>
     internal static class Interop
     {
-        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool SetDllDirectory(string lpPathName);
-
         /// <summary>
         ///     Initializes the <see cref="Interop"/> class.
         /// </summary>
@@ -22,7 +20,7 @@ namespace NNG.Native
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                SetDllDirectory(GetWindowsLibraryPath());
+                Kernel32.SetDllDirectory(GetWindowsLibraryPath());
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
