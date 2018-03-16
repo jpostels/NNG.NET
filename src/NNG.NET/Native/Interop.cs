@@ -1,13 +1,22 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using NNG.Native.Utils.Linux;
-using NNG.Native.Utils.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace NNG.Native
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using Utils.Linux;
+    using Utils.Windows;
+
+    using nng_socket = System.UInt32;
+    using nng_dialer = System.UInt32;
+    using nng_listener = System.UInt32;
+    using nng_pipe = System.UInt32;
+    using nng_duration = System.Int32;
+
     /// <summary>
     ///     Provider for P/Invoke of nng library functions
     /// </summary>
+    [SuppressMessage("ReSharper", "BuiltInTypeReferenceStyle", Justification = "using alias for simple native interop types")]
     internal static class Interop
     {
         /// <summary>
@@ -46,10 +55,19 @@ namespace NNG.Native
             Marshal.PrelinkAll(typeof(Interop));
         }
 
+        /// <summary>
+        ///     Close socket
+        /// </summary>
+        /// <param name="socketId">The socket.</param>
+        /// <returns></returns>
         [DllImport(LibraryName, EntryPoint = "nng_close")]
-        public static extern int NngClose(uint socket);
+        public static extern int nng_close(nng_socket socketId);
 
+        /// <summary>
+        ///     Report library version
+        /// </summary>
+        /// <returns></returns>
         [DllImport(LibraryName, EntryPoint = "nng_version")]
-        public static extern IntPtr NngVersion();
+        public static extern IntPtr nng_version();
     }
 }

@@ -15,7 +15,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public void VersionTest01()
         {
-            var nngVersionPtr = Interop.NngVersion();
+            var nngVersionPtr = Interop.nng_version();
 
             Assert.NotEqual(IntPtr.Zero, nngVersionPtr);
 
@@ -34,7 +34,7 @@ namespace NNG.NETTests.Native
             const int minorVersion = 5;
             const int patchVersion = 0;
 
-            var nngVersionPtr = Interop.NngVersion();
+            var nngVersionPtr = Interop.nng_version();
             var nngVersionStr = Marshal.PtrToStringAnsi(nngVersionPtr);
 
             Print("Version: " + nngVersionStr);
@@ -55,7 +55,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public void CloseTest01()
         {
-            var res = Interop.NngClose(2);
+            var res = Interop.nng_close(2);
             Print("HRESULT: " + res);
         }
     }
