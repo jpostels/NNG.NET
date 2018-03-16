@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace NNG.Native.Windows
+namespace NNG.Native.Utils.Windows
 {
     internal static class Kernel32
     {

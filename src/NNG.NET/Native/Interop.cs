@@ -1,7 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
-using NNG.Native.Windows;
+using NNG.Native.Utils.Linux;
+using NNG.Native.Utils.Windows;
 
 namespace NNG.Native
 {
@@ -10,6 +10,11 @@ namespace NNG.Native
     /// </summary>
     internal static class Interop
     {
+        /// <summary>
+        ///     The librarys name
+        /// </summary>
+        public const string LibraryName = "nng";
+
         /// <summary>
         ///     Initializes the <see cref="Interop"/> class.
         /// </summary>
@@ -20,11 +25,14 @@ namespace NNG.Native
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Kernel32.SetDllDirectory(GetWindowsLibraryPath());
+                // Just set the dll directory. The automatic marshalling of the DllImportAtribute will do the rest.
+                Kernel32.SetDllDirectory(WindowsLibraryLoader.GetWindowsLibraryPath());
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                // TODO set lookup path for linux environment or load directly
+                // Loading it once explicitly will avoid implicit loading via the DllImportAttribute,
+                // which would likely use the wrong search path.
+                UnixLibraryLoader.LoadPosixLibrary(LibraryName);
             }
             else
             {
@@ -32,39 +40,16 @@ namespace NNG.Native
                 throw new NotSupportedException("NNG.NET does not support this Operating System.");
             }
 
+            // Prelink all P/Invoke functions.
+            // This makes sure all methods are functioning correctly
+            // NOTE: Does not actually invoke a function call
             Marshal.PrelinkAll(typeof(Interop));
         }
 
-        /// <summary>
-        ///     Gets the windows library path.
-        /// </summary>
-        /// <returns>
-        ///     Returns a string in the form of "runtimes/win-{arch}/native/"
-        /// </returns>
-        private static string GetWindowsLibraryPath()
-        {
-            var arch = IsX64() ? "x64" : "x86";
-            return Path.Combine(AppContext.BaseDirectory, $"runtimes/win-{arch}/native/");
-        }
+        [DllImport(LibraryName, EntryPoint = "nng_close")]
+        public static extern int NngClose(uint socket);
 
-        /// <summary>
-        ///     Determines whether this platforms architecture is x64.
-        /// </summary>
-        /// <remarks>
-        ///     This is necessary due to an error in .NET Framework v4.7 where 
-        ///     <see cref="System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture"/> 
-        ///     may return the wrong value i.e. x86 on x64 processes. <br />
-        ///     see also: https://github.com/dotnet/corefx/issues/25267
-        /// </remarks>
-        /// <returns>
-        ///     <c>true</c> if this platforms architecture is x64; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsX64() => IntPtr.Size == sizeof(ulong);
-
-        [DllImport("nng")]
-        public static extern int nng_close(uint socket);
-
-        [DllImport("nng")]
-        public static extern IntPtr nng_version();
+        [DllImport(LibraryName, EntryPoint = "nng_version")]
+        public static extern IntPtr NngVersion();
     }
 }
