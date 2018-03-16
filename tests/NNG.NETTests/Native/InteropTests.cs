@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using NNG.Native;
 using Xunit;
@@ -10,6 +11,14 @@ namespace NNG.NETTests.Native
     {
         public InteropTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
+        }
+
+        [Fact]
+        public void InitializeTest01()
+        {
+            Assert.False(Interop.IsInitialized, "Interop.IsInitialized");
+            Interop.Initialize();
+            Assert.True(Interop.IsInitialized, "Interop.IsInitialized");
         }
 
         [Fact]
@@ -57,6 +66,12 @@ namespace NNG.NETTests.Native
         {
             var res = Interop.nng_close(2);
             Print("HRESULT: " + res);
+        }
+
+        [Fact]
+        public void CloseAllTest01()
+        {
+            Interop.nng_closeall();
         }
     }
 }
