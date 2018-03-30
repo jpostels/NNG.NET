@@ -1,10 +1,11 @@
-﻿using System.Threading;
-using NNG.Native.InteropTypes;
-
-namespace NNG.Native
+﻿namespace NNG.Native
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Threading;
+
+    using InteropTypes;
+
     using Utils.Linux;
     using Utils.Windows;
 
@@ -105,13 +106,6 @@ namespace NNG.Native
         /// <returns></returns>
         [DllImport(LibraryName, EntryPoint = "nng_close")]
         public static extern int nng_close(nng_socket socketId);
-
-        /// <summary>
-        ///     Report library version
-        /// </summary>
-        /// <returns></returns>
-        [DllImport(LibraryName, EntryPoint = "nng_version")]
-        public static extern IntPtr nng_version();
 
         [DllImport(LibraryName, EntryPoint = "nng_closeall")]
         public static extern void nng_closeall();
@@ -282,6 +276,237 @@ namespace NNG.Native
         [DllImport(LibraryName)]
         public static extern void nng_free(IntPtr ptr, UIntPtr size);
 
-        // TODO continue at nng.h line 277
+        #region AIO
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate void AioAllocCallback(void* ptr);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_aio_alloc(ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, void* args);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_free(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_stop(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_aio_result(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern UIntPtr nng_aio_count(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_cancel(ref nng_aio aio);
+
+        // TODO nng_aio_abort is not yet implemented by nng
+        //[DllImport(LibraryName)]
+        //public static extern void nng_aio_abort(ref nng_aio aio, int i);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_wait(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_set_msg(ref nng_aio aio, ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern ref nng_msg nng_aio_get_msg(ref nng_aio aio);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_aio_set_input(ref nng_aio aio, uint index, void* arg);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe void* nng_aio_get_input(ref nng_aio aio, uint index);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_aio_set_output(ref nng_aio aio, uint index, void* arg);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe void* nng_aio_get_output(ref nng_aio aio, uint index);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_set_timeout(ref nng_aio aio, nng_duration timeout);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_aio_set_iov(ref nng_aio aio, uint niov, in nng_iov iov);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_aio_finish(ref nng_aio aio, int rv);
+
+        #endregion AIO
+
+        #region Message API
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_alloc(ref nng_msg* msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_msg_free(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_realloc(ref nng_msg msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe void* nng_msg_header(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern UIntPtr nng_msg_header_len(in nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe void* nng_msg_body(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern UIntPtr nng_msg_len(in nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_append(ref nng_msg msg, void* data, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_insert(ref nng_msg msg, void* data, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_trim(ref nng_msg msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_chop(ref nng_msg msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_header_append(ref nng_msg msg, void* data, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_header_insert(ref nng_msg msg, void* data, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_trim(ref nng_msg msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_chop(ref nng_msg msg, UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_append_u32(ref nng_msg msg, uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_insert_u32(ref nng_msg msg, uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_chop_u32(ref nng_msg msg, ref uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_header_trim_u32(ref nng_msg msg, ref uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_append_u32(ref nng_msg msg, uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_insert_u32(ref nng_msg msg, uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_chop_u32(ref nng_msg msg, ref uint val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_msg_trim_u32(ref nng_msg msg, ref uint val);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_dup(ref nng_msg* msgDuplicate, ref nng_msg msgSource);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_msg_clear(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_msg_header_clear(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_msg_set_pipe(ref nng_msg msg, nng_pipe pipe);
+
+        [DllImport(LibraryName)]
+        public static extern nng_pipe nng_msg_get_pipe(ref nng_msg msg);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_msg_getopt(ref nng_msg msg, int opt, void* ptr, ref UIntPtr size);
+
+        #endregion
+
+        #region Pipe API
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_pipe_getopt(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* ptr, ref UIntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pipe_getopt_int(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref int val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pipe_getopt_ms(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref nng_duration duration);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pipe_getopt_size(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref UIntPtr val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pipe_getopt_uint64(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref ulong val);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pipe_close(nng_pipe pipe);
+
+        #endregion
+
+        #region Statistics
+
+        // Statistics.  These are for informational purposes only, and subject
+        // to change without notice.  The API for accessing these is stable,
+        // but the individual statistic names, values, and meanings are all
+        // subject to change.
+
+        //TODO the following methods are not yet implemented by nng
+
+        //[DllImport(LibraryName)]
+        //public static extern unsafe int nng_snapshot_create(nng_socket socket, ref nng_snapshot* snapshot);
+
+        //[DllImport(LibraryName)]
+        //public static extern void nng_snapshot_free(ref nng_snapshot snapshot);
+
+        //[DllImport(LibraryName)]
+        //public static extern int nng_snapshot_update(ref nng_snapshot snapshot);
+
+        //[DllImport(LibraryName)]
+        //public static extern unsafe int nng_snapshot_next(ref nng_snapshot snapshot, ref nng_stat* stat);
+
+        //[DllImport(LibraryName)]
+        //[return: MarshalAs(UnmanagedType.LPStr)]
+        //public static extern string nng_stat_name(ref nng_stat stat);
+
+        //[DllImport(LibraryName)]
+        //[return: MarshalAs(UnmanagedType.I4)]
+        //public static extern nng_stat_type_enum nng_stat_type(ref nng_stat stat);
+
+        //[DllImport(LibraryName)]
+        //[return: MarshalAs(UnmanagedType.I4)]
+        //public static extern nng_unit_enum nng_stat_unit(ref nng_stat stat);
+
+        //[DllImport(LibraryName)]
+        //public static extern long nng_stat_value(ref nng_stat stat);
+
+        #endregion
+
+        [DllImport(LibraryName)]
+        public static extern int nng_device(nng_socket socket1, nng_socket socket2);
+
+        #region URL support
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_url_parse(ref nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
+
+        [DllImport(LibraryName)]
+        public static extern void nng_url_free(ref nng_url url);
+
+        [DllImport(LibraryName)]
+        public static extern unsafe int nng_url_clone(ref nng_url* urlDuplicate, ref nng_url urlSource);
+
+        #endregion
+
+        /// <summary>
+        ///     Report library version
+        /// </summary>
+        /// <returns></returns>
+        [DllImport(LibraryName, EntryPoint = "nng_version")]
+        public static extern IntPtr nng_version();
     }
 }
