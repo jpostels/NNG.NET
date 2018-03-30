@@ -73,5 +73,41 @@ namespace NNG.NETTests.Native
         {
             Interop.nng_closeall();
         }
+
+        [Fact]
+        public void AllocTest01()
+        {
+            const int bufSize = 512;
+            var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
+            Assert.NotEqual(IntPtr.Zero, nngAlloc);
+
+            unsafe
+            {
+                var pointer = nngAlloc.ToPointer();
+
+                for (var i = 0; i < bufSize; i++)
+                {
+                    *((byte*)pointer + i) = (byte)i;
+                }
+
+                for (var i = 0; i < bufSize; i++)
+                {
+                    var bytePointer = (byte*)pointer;
+                    Assert.Equal((byte)(i % 256), bytePointer[i]);
+                }
+            }
+
+            Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
+        }
+
+        [Fact]
+        public void AllocAndFreeTest01()
+        {
+            const int bufSize = 512;
+            var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
+            Assert.NotEqual(IntPtr.Zero, nngAlloc);
+
+            Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
+        }
     }
 }
