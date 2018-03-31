@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using NNG.Native;
 using Xunit;
@@ -10,6 +11,14 @@ namespace NNG.NETTests.Native
     {
         public InteropTests(ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
+        }
+
+        [Fact]
+        public void InitializeTest01()
+        {
+            Assert.False(Interop.IsInitialized, "Interop.IsInitialized");
+            Interop.Initialize();
+            Assert.True(Interop.IsInitialized, "Interop.IsInitialized");
         }
 
         [Fact]
@@ -57,6 +66,48 @@ namespace NNG.NETTests.Native
         {
             var res = Interop.nng_close(2);
             Print("HRESULT: " + res);
+        }
+
+        [Fact]
+        public void CloseAllTest01()
+        {
+            Interop.nng_closeall();
+        }
+
+        [Fact]
+        public void AllocTest01()
+        {
+            const int bufSize = 512;
+            var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
+            Assert.NotEqual(IntPtr.Zero, nngAlloc);
+
+            unsafe
+            {
+                var pointer = nngAlloc.ToPointer();
+
+                for (var i = 0; i < bufSize; i++)
+                {
+                    *((byte*)pointer + i) = (byte)i;
+                }
+
+                for (var i = 0; i < bufSize; i++)
+                {
+                    var bytePointer = (byte*)pointer;
+                    Assert.Equal((byte)(i % 256), bytePointer[i]);
+                }
+            }
+
+            Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
+        }
+
+        [Fact]
+        public void AllocAndFreeTest01()
+        {
+            const int bufSize = 512;
+            var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
+            Assert.NotEqual(IntPtr.Zero, nngAlloc);
+
+            Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
         }
     }
 }

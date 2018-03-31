@@ -1,0 +1,1 @@
+﻿[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "ExceptionNotDocumented", Scope = "class", Target = "InteropTests")]
