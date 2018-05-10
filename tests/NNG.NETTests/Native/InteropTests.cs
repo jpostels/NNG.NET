@@ -65,7 +65,7 @@ namespace NNG.NETTests.Native
         public void CloseTest01()
         {
             var res = Interop.nng_close(2);
-            Print("HRESULT: " + res);
+            Print("HRESULT: 0x" + res.ToString("X8"));
         }
 
         [Fact]

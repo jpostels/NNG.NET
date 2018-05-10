@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NNG.Native.Utils
+namespace NNG.Utilities
 {
     internal static class SystemInformation
     {

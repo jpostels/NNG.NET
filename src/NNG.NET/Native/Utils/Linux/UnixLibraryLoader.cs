@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using NNG.Utilities;
 
 namespace NNG.Native.Utils.Linux
 {
