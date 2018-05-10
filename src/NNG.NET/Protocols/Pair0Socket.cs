@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NNG.Protocols
 {
-    public class PairSocket
+    public class Pair0Socket
     {
     }
 }
