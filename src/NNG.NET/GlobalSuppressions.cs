@@ -4,6 +4,11 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_ctx_s")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_dialer_s")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_listener_s")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_pipe_s")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_socket_s")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_iov")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_msg")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "type", Target = "~T:NNG.Native.InteropTypes.nng_url")]
