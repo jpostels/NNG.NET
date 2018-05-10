@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NNG.Native;
 
 namespace NNG.Protocols
 {
-    public class SubscribeSocket
+    public class SubscribeSocket : NngBaseSocket
     {
-        public const string NNG_OPT_SUB_SUBSCRIBE = "sub:subscribe";
+        internal const string NNG_OPT_SUB_SUBSCRIBE = "sub:subscribe";
 
-        public const string NNG_OPT_SUB_UNSUBSCRIBE = "sub:unsubscribe";
+        internal const string NNG_OPT_SUB_UNSUBSCRIBE = "sub:unsubscribe";
+
+        public SubscribeSocket() : base(Interop.nng_sub0_open)
+        {
+        }
     }
 }
