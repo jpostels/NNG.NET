@@ -634,13 +634,13 @@
         #region URL support
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_parse([Out, In] ref nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
+        public static extern unsafe int nng_url_parse(out nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
 
         [DllImport(LibraryName)]
         public static extern void nng_url_free(ref nng_url url);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_clone([Out, In] ref nng_url* urlDuplicate, ref nng_url urlSource);
+        public static extern unsafe int nng_url_clone(out nng_url* urlDuplicate, ref nng_url urlSource);
 
         #endregion
 
