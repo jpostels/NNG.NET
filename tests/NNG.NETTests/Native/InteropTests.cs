@@ -120,5 +120,32 @@ namespace NNG.NETTests.Native
 
             Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
         }
+
+        [Fact]
+        public void ReqOpen01()
+        {
+            var error = Interop.nng_req0_open(out var socket);
+
+            Print("ERROR: 0x" + error.ToString("X"));
+            Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
+
+            Assert.Equal(0, error);
+        }
+
+        [Fact]
+        public void OpenAndClose01()
+        {
+            var error = Interop.nng_req0_open(out var socket);
+
+            Print("ERROR: 0x" + error.ToString("X"));
+            Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
+
+            Assert.Equal(0, error);
+
+            var error2 = Interop.nng_close(socket);
+
+            Print("ERROR: 0x" + error2.ToString("X"));
+            Assert.Equal(0, error2);
+        }
     }
 }
