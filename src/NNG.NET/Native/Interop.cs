@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.InteropServices;
-    using System.Threading;
 
     using InteropTypes;
 
@@ -92,8 +91,6 @@
                 // This makes sure all methods are functioning correctly
                 // NOTE: Does not actually invoke a function call
                 Marshal.PrelinkAll(typeof(Interop));
-
-                Interlocked.MemoryBarrier();
                 IsInitialized = true;
             }
         }

@@ -39,7 +39,7 @@ namespace NNG.NETTests.Native
         public void VersionTest02()
         {
             const int majorVersion = 0;
-            const int minorVersion = 5;
+            const int minorVersion = 9;
             const int patchVersion = 0;
 
             var nngVersionPtr = Interop.nng_version();
