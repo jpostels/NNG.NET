@@ -6,5 +6,6 @@ namespace NNG.Protocols
 {
     public class RequestSocket
     {
+        public const string NNG_OPT_REQ_RESENDTIME = "req:resend-time";
     }
 }

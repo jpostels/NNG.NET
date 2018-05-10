@@ -6,5 +6,8 @@ namespace NNG.Protocols
 {
     public class SubscribeSocket
     {
+        public const string NNG_OPT_SUB_SUBSCRIBE = "sub:subscribe";
+
+        public const string NNG_OPT_SUB_UNSUBSCRIBE = "sub:unsubscribe";
     }
 }
