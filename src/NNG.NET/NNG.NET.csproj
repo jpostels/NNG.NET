@@ -2,12 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>	
-    <Version>0.1.0</Version>
+    <Version>0.1.4</Version>
     <RootNamespace>NNG</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="NNG.NET.csproj.DotSettings" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="runtimes\linux-x64\native\" />

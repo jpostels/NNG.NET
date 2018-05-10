@@ -634,13 +634,13 @@
         #region URL support
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_parse([Out, In] ref nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
+        public static extern unsafe int nng_url_parse(out nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
 
         [DllImport(LibraryName)]
         public static extern void nng_url_free(ref nng_url url);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_clone([Out, In] ref nng_url* urlDuplicate, ref nng_url urlSource);
+        public static extern unsafe int nng_url_clone(out nng_url* urlDuplicate, ref nng_url urlSource);
 
         #endregion
 
@@ -650,6 +650,95 @@
         /// <returns></returns>
         [DllImport(LibraryName, EntryPoint = "nng_version")]
         public static extern IntPtr nng_version();
+
+        #region protocols
+
+        [DllImport(LibraryName)]
+        public static extern int nng_req0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_req0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_rep0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_rep0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_surveyor0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_surveyor0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_respondent0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_respondent0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pub0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pub0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_sub0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_sub0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_push0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_push0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pull0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pull0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pair0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pair0_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pair1_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_pair1_open_raw(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_bus0_open(out nng_socket socket);
+
+        [DllImport(LibraryName)]
+        public static extern int nng_bus0_open_raw(out nng_socket socket);
+
+        #endregion
+
+        /*#region transports
+        
+        [DllImport(LibraryName)]
+        public static extern int nng_inproc_register();
+
+        [DllImport(LibraryName)]
+        public static extern int nng_ipc_register();
+
+        [DllImport(LibraryName)]
+        public static extern int nng_tcp_register();
+
+        [DllImport(LibraryName)]
+        public static extern int nng_ws_register();
+
+        [DllImport(LibraryName)]
+        public static extern int nng_wss_register();
+        
+        #endregion*/
 
 #pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
     }

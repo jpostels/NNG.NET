@@ -25,8 +25,9 @@ namespace NNG.Native.InteropTypes
     /// </remarks>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native names of library")]
     [SuppressMessage("ReSharper", "EnumUnderlyingTypeIsInt", Justification = "Being explicit here.")]
-    public enum nng_errno_enum : int
+    internal enum nng_errno : int
     {
+        NNG_SUCCESS = 0,
         NNG_EINTR = 1,
         NNG_ENOMEM = 2,
         NNG_EINVAL = 3,

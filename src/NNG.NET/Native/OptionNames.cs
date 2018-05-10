@@ -46,9 +46,15 @@ namespace NNG.Native
 
         public const string NNG_OPT_RECONNMAXT = "reconnect-time-max";
 
+        #region TCP
+
         public const string NNG_OPT_TCP_NODELAY = "tcp-nodelay";
 
         public const string NNG_OPT_TCP_KEEPALIVE = "tcp-keepalive";
+
+        #endregion
+
+        #region TLS
 
         /// <summary>
         /// NNG_OPT_TLS_CONFIG is a pointer to an nng_tls_config object.  Generally
@@ -107,6 +113,8 @@ namespace NNG.Native
         /// authentication is disabled with `NNG_TLS_AUTH_MODE_NONE`.
         /// </summary>
         public const string NNG_OPT_TLS_VERIFIED = "tls-verified";
+
+        #endregion
 
         // TODO: priorities, socket names, ipv4only
     }
