@@ -21,6 +21,8 @@
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "BuiltInTypeReferenceStyle", Justification = "Using native names")]
     internal static class Interop
     {
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
+
         /// <summary>
         ///     The librarys name
         /// </summary>
@@ -111,7 +113,7 @@
         public static extern void nng_closeall();
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_setopt(nng_socket sockedId, string optionName, void* value, UIntPtr size);
+        public static extern unsafe int nng_setopt(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
 
         [DllImport(LibraryName)]
         public static extern int nng_setopt_int(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
@@ -248,8 +250,8 @@
         [DllImport(LibraryName)]
         public static extern int nng_listener_getopt_ptr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref IntPtr value);
 
-        [DllImport(LibraryName)]
-        [return: MarshalAs(UnmanagedType.LPStr)]
+        [DllImport(LibraryName, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.LPWStr)]
         public static extern string nng_strerror(int errorCode);
 
         [DllImport(LibraryName)]
@@ -508,5 +510,7 @@
         /// <returns></returns>
         [DllImport(LibraryName, EntryPoint = "nng_version")]
         public static extern IntPtr nng_version();
+
+#pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
     }
 }
