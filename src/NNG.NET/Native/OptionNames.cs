@@ -10,11 +10,15 @@ namespace NNG.Native
     {
         public const string NNG_OPT_SOCKNAME = "socket-name";
 
-        public const string NNG_OPT_DOMAIN = "compat:domain"; // legacy compat only
-
         public const string NNG_OPT_RAW = "raw";
 
-        public const string NNG_OPT_LINGER = "linger";
+        public const string NNG_OPT_PROTO = "protocol";
+
+        public const string NNG_OPT_PROTONAME = "protocol-name";
+
+        public const string NNG_OPT_PEER = "peer";
+
+        public const string NNG_OPT_PEERNAME = "peer-name";
 
         public const string NNG_OPT_RECVBUF = "recv-buffer";
 
@@ -36,80 +40,74 @@ namespace NNG.Native
 
         public const string NNG_OPT_MAXTTL = "ttl-max";
 
-        public const string NNG_OPT_PROTOCOL = "protocol";
-
-        public const string NNG_OPT_TRANSPORT = "transport";
-
         public const string NNG_OPT_RECVMAXSZ = "recv-size-max";
 
         public const string NNG_OPT_RECONNMINT = "reconnect-time-min";
 
         public const string NNG_OPT_RECONNMAXT = "reconnect-time-max";
 
+        public const string NNG_OPT_TCP_NODELAY = "tcp-nodelay";
+
+        public const string NNG_OPT_TCP_KEEPALIVE = "tcp-keepalive";
+
         /// <summary>
-        ///     TLS options are only used when the underlying transport supports TLS.
+        /// NNG_OPT_TLS_CONFIG is a pointer to an nng_tls_config object.  Generally
+        /// this can used with endpoints, although once an endpoint is started, or
+        /// once a configuration is used, the value becomes read-only. Note that
+        /// when configuring the object, a hold is placed on the TLS configuration,
+        /// using a reference count.  When retrieving the object, no such hold is
+        /// placed, and so the caller must take care not to use the associated object
+        /// after the endpoint it is associated with is closed.
         /// </summary>
-        public static class Tls
-        {
-            /// <summary>
-            /// NNG_OPT_TLS_CONFIG is a pointer to an nng_tls_config object.  Generally
-            /// this can used with endpoints, although once an endpoint is started, or
-            /// once a configuration is used, the value becomes read-only. Note that
-            /// when configuring the object, a hold is placed on the TLS configuration,
-            /// using a reference count.  When retrieving the object, no such hold is
-            /// placed, and so the caller must take care not to use the associated object
-            /// after the endpoint it is associated with is closed.
-            /// </summary>
-            public const string NNG_OPT_TLS_CONFIG = "tls-config";
+        public const string NNG_OPT_TLS_CONFIG = "tls-config";
 
-            /// <summary>
-            /// NNG_OPT_TLS_AUTH_MODE is a write-only integer (int) option that specifies
-            /// whether peer authentication is needed.  The option can take one of the
-            /// values of NNG_TLS_AUTH_MODE_NONE, NNG_TLS_AUTH_MODE_OPTIONAL, or
-            /// NNG_TLS_AUTH_MODE_REQUIRED.  The default is typically NNG_TLS_AUTH_MODE_NONE
-            /// for listeners, and NNG_TLS_AUTH_MODE_REQUIRED for dialers. If set to
-            /// REQUIRED, then connections will be rejected if the peer cannot be verified.
-            /// If set to OPTIONAL, then a verification step takes place, but the connection
-            /// is still permitted.  (The result can be checked with NNG_OPT_TLS_VERIFIED).
-            /// </summary>
-            public const string NNG_OPT_TLS_AUTH_MODE = "tls-authmode";
+        /// <summary>
+        /// NNG_OPT_TLS_AUTH_MODE is a write-only integer (int) option that specifies
+        /// whether peer authentication is needed.  The option can take one of the
+        /// values of NNG_TLS_AUTH_MODE_NONE, NNG_TLS_AUTH_MODE_OPTIONAL, or
+        /// NNG_TLS_AUTH_MODE_REQUIRED.  The default is typically NNG_TLS_AUTH_MODE_NONE
+        /// for listeners, and NNG_TLS_AUTH_MODE_REQUIRED for dialers. If set to
+        /// REQUIRED, then connections will be rejected if the peer cannot be verified.
+        /// If set to OPTIONAL, then a verification step takes place, but the connection
+        /// is still permitted.  (The result can be checked with NNG_OPT_TLS_VERIFIED).
+        /// </summary>
+        public const string NNG_OPT_TLS_AUTH_MODE = "tls-authmode";
 
-            /// <summary>
-            /// NNG_OPT_TLS_CERT_KEY_FILE names a single file that contains a certificate
-            /// and key identifying the endpoint.  This is a write-only value.  This can be
-            /// set multiple times for times for different keys/certs corresponding to
-            /// different algorithms on listeners, whereas dialers only support one.  The
-            /// file must contain both cert and key as PEM blocks, and the key must
-            /// not be encrypted.  (If more flexibility is needed, use the TLS configuration
-            /// directly, via NNG_OPT_TLS_CONFIG.)
-            /// </summary>
-            public const string NNG_OPT_TLS_CERT_KEY_FILE = "tls-cert-key-file";
+        /// <summary>
+        /// NNG_OPT_TLS_CERT_KEY_FILE names a single file that contains a certificate
+        /// and key identifying the endpoint.  This is a write-only value.  This can be
+        /// set multiple times for times for different keys/certs corresponding to
+        /// different algorithms on listeners, whereas dialers only support one.  The
+        /// file must contain both cert and key as PEM blocks, and the key must
+        /// not be encrypted.  (If more flexibility is needed, use the TLS configuration
+        /// directly, via NNG_OPT_TLS_CONFIG.)
+        /// </summary>
+        public const string NNG_OPT_TLS_CERT_KEY_FILE = "tls-cert-key-file";
 
-            /// <summary>
-            /// NNG_OPT_TLS_CA_FILE names a single file that contains certificate(s) for a
-            /// CA, and optionally CRLs, which are used to validate the peer's certificate.
-            /// This is a write-only value, but multiple CAs can be loaded by setting this
-            /// multiple times.
-            /// </summary>
-            public const string NNG_OPT_TLS_CA_FILE = "tls-ca-file";
+        /// <summary>
+        /// NNG_OPT_TLS_CA_FILE names a single file that contains certificate(s) for a
+        /// CA, and optionally CRLs, which are used to validate the peer's certificate.
+        /// This is a write-only value, but multiple CAs can be loaded by setting this
+        /// multiple times.
+        /// </summary>
+        public const string NNG_OPT_TLS_CA_FILE = "tls-ca-file";
 
-            /// <summary>
-            /// NNG_OPT_TLS_SERVER_NAME is a write-only string that can typically be
-            /// set on dialers to check the CN of the server for a match.  This
-            /// can also affect SNI (server name indication).  It usually has no effect
-            /// on listeners.
-            /// </summary>
-            public const string NNG_OPT_TLS_SERVER_NAME = "tls-server-name";
+        /// <summary>
+        /// NNG_OPT_TLS_SERVER_NAME is a write-only string that can typically be
+        /// set on dialers to check the CN of the server for a match.  This
+        /// can also affect SNI (server name indication).  It usually has no effect
+        /// on listeners.
+        /// </summary>
+        public const string NNG_OPT_TLS_SERVER_NAME = "tls-server-name";
 
-            /// <summary>
-            /// NNG_OPT_TLS_VERIFIED returns a single integer, indicating whether the peer
-            /// has been verified (1) or not (0).  Typically this is read-only, and only
-            /// available for pipes. This option may return incorrect results if peer
-            /// authentication is disabled with `NNG_TLS_AUTH_MODE_NONE`.
-            /// </summary>
-            public const string NNG_OPT_TLS_VERIFIED = "tls-verified";
+        /// <summary>
+        /// NNG_OPT_TLS_VERIFIED returns a single integer, indicating whether the peer
+        /// has been verified (1) or not (0).  Typically this is read-only, and only
+        /// available for pipes. This option may return incorrect results if peer
+        /// authentication is disabled with `NNG_TLS_AUTH_MODE_NONE`.
+        /// </summary>
+        public const string NNG_OPT_TLS_VERIFIED = "tls-verified";
 
-            // TODO: priorities, socket names, ipv4only
-        }
+        // TODO: priorities, socket names, ipv4only
     }
 }

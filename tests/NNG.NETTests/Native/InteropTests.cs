@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using FluentAssertions;
 using NNG.Native;
+using NNG.Native.InteropTypes;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -15,8 +17,11 @@ namespace NNG.NETTests.Native
         [Fact]
         public void InitializeTest01()
         {
+            Print("BEFORE => Initialized: " + Interop.IsInitialized.ToString());
             Assert.False(Interop.IsInitialized, "Interop.IsInitialized");
             Interop.Initialize();
+
+            Print("AFTER  => Initialized: " + Interop.IsInitialized.ToString());
             Assert.True(Interop.IsInitialized, "Interop.IsInitialized");
         }
 
@@ -49,7 +54,7 @@ namespace NNG.NETTests.Native
 
             var split = nngVersionStr.Split('.');
 
-            Assert.Equal(3, split.Length);
+            split.Length.Should().Be(3);
 
             Assert.True(int.TryParse(split[0], out var major), "int.TryParse(split[0], out var major)");
             Assert.True(int.TryParse(split[1], out var minor), "int.TryParse(split[1], out var minor)");
@@ -63,13 +68,16 @@ namespace NNG.NETTests.Native
         [Fact]
         public void CloseTest01()
         {
-            var res = Interop.nng_close(2);
+            nng_socket nngSocket;
+            nngSocket.id = 2;
+            var res = Interop.nng_close(nngSocket);
             Print("HRESULT: 0x" + res.ToString("X8"));
         }
 
         [Fact]
         public void CloseAllTest01()
         {
+            Print("Call nng_closeall");
             Interop.nng_closeall();
         }
 
@@ -92,7 +100,9 @@ namespace NNG.NETTests.Native
                 for (var i = 0; i < bufSize; i++)
                 {
                     var bytePointer = (byte*)pointer;
-                    Assert.Equal((byte)(i % 256), bytePointer[i]);
+
+                    Print(i.ToString("D3") + ": " + bytePointer[i].ToString("D3"));
+                    bytePointer[i].Should().Be((byte) (i % 256));
                 }
             }
 
@@ -105,6 +115,8 @@ namespace NNG.NETTests.Native
             const int bufSize = 512;
             var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
             Assert.NotEqual(IntPtr.Zero, nngAlloc);
+
+            Print("Ptr: " + nngAlloc.ToString("X"));
 
             Interop.nng_free(nngAlloc, new UIntPtr(bufSize));
         }
