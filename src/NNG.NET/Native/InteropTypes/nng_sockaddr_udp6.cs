@@ -3,12 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace NNG.Native.InteropTypes
 {
-    /// <summary>
-    ///     TODO Insert doc
-    /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native names of library")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct nng_sockaddr_in6
+    public unsafe struct nng_sockaddr_udp6
     {
         public nng_sockaddr_family sa_family;
 

@@ -11,9 +11,6 @@ namespace NNG.Native.InteropTypes
         public nng_sockaddr_family s_family;
 
         [FieldOffset(0)]
-        public nng_sockaddr_path s_path;
-
-        [FieldOffset(0)]
         public nng_sockaddr_path s_inproc;
 
         [FieldOffset(0)]
