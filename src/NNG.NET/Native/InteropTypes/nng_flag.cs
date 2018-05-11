@@ -3,8 +3,13 @@
 namespace NNG.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
-    public enum nng_flag_enum : int
+    public enum nng_flag : int
     {
+        /// <summary>
+        ///     No flags
+        /// </summary>
+        NONE = 0,
+
         /// <summary>
         ///     Recv to allocate receive buffer
         /// </summary>
