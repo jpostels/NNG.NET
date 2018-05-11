@@ -11,6 +11,11 @@ namespace NNG
     public abstract class NngBaseSocket : IDisposable
     {
         /// <summary>
+        ///     The socket creation lock
+        /// </summary>
+        private static readonly object SocketCreationLock = new object();
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="NngBaseSocket"/> class.
         /// </summary>
         /// <param name="openFunction">The open function.</param>
@@ -49,7 +54,10 @@ namespace NNG
             nng_socket socket;
             try
             {
-                result = openFunction(out socket);
+                lock (SocketCreationLock)
+                {
+                    result = openFunction(out socket); 
+                }
             }
             catch (Exception exception)
             {
