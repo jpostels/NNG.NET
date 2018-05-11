@@ -177,10 +177,10 @@
         public static extern unsafe int nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* ptr);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, ref nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag_enum flags);
+        public static extern int nng_listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dial(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, ref nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag_enum flags);
+        public static extern int nng_dial(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
         public static extern int nng_dialer_create([Out, In] ref nng_dialer dialer, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
@@ -313,10 +313,10 @@
         public static extern string nng_strerror(int errorCode);
 
         [DllImport(LibraryName)]
-        public static extern int nng_send(nng_socket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag_enum flags);
+        public static extern int nng_send(nng_socket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_recv(nng_socket socketId, IntPtr ptr, out UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag_enum flags);
+        public static extern int nng_recv(nng_socket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
         public static extern int nng_sendmsg(nng_socket socketId, ref nng_msg message, int flags);
