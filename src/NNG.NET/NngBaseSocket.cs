@@ -56,7 +56,7 @@ namespace NNG
             {
                 lock (SocketCreationLock)
                 {
-                    result = openFunction(out socket); 
+                    result = openFunction(out socket);
                 }
             }
             catch (Exception exception)
