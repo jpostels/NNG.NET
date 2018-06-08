@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using FluentAssertions;
 using NNG.Native;
@@ -43,16 +45,18 @@ namespace NNG.NETTests.Native
         [Fact]
         public void VersionTest02()
         {
-            const int majorVersion = 0;
-            const int minorVersion = 9;
+            const int majorVersion = 1;
+            const int minorVersion = 0;
             const int patchVersion = 0;
+            const string suffix = "rc.1";
 
             var nngVersionPtr = Interop.nng_version();
             var nngVersionStr = Marshal.PtrToStringAnsi(nngVersionPtr);
 
             Print("Version: " + nngVersionStr);
 
-            var split = nngVersionStr.Split('.');
+            var presplit = nngVersionStr.Split('-');
+            var split = presplit[0].Split('.');
 
             split.Length.Should().Be(3);
 
@@ -63,6 +67,8 @@ namespace NNG.NETTests.Native
             Assert.Equal(majorVersion, major);
             Assert.Equal(minorVersion, minor);
             Assert.Equal(patchVersion, patch);
+
+            Assert.Equal(suffix, presplit[1]);
         }
 
         [Fact]
@@ -102,7 +108,7 @@ namespace NNG.NETTests.Native
                     var bytePointer = (byte*)pointer;
 
                     Print(i.ToString("D3") + ": " + bytePointer[i].ToString("D3"));
-                    bytePointer[i].Should().Be((byte) (i % 256));
+                    bytePointer[i].Should().Be((byte)(i % 256));
                 }
             }
 
@@ -146,6 +152,15 @@ namespace NNG.NETTests.Native
 
             Print("ERROR: 0x" + error2.ToString("X"));
             Assert.Equal(0, error2);
+        }
+
+        [Fact]
+        public unsafe void PipeNotifyCall()
+        {
+            var error = Interop.nng_pipe_notify(new nng_socket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (pipe, action, arg) => { },
+                IntPtr.Zero.ToPointer());
+
+            Print("ERROR: 0x" + error.ToString("X"));
         }
     }
 }
