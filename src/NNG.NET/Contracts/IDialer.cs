@@ -2,6 +2,6 @@
 {
     public interface IDialer
     {
-        
+        void Dial();
     }
 }
