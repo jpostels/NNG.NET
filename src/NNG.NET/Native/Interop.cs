@@ -174,7 +174,7 @@
         #endregion
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* ptr);
+        public static extern unsafe int nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* args);
 
         [DllImport(LibraryName)]
         public static extern int nng_listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
