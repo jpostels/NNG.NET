@@ -19,17 +19,16 @@ namespace NNG.NETTests.Native
         [Fact]
         public void InitializeTest01()
         {
-            Print("BEFORE => Initialized: " + Interop.IsInitialized.ToString());
-            Assert.False(Interop.IsInitialized, "Interop.IsInitialized");
             Interop.Initialize();
 
-            Print("AFTER  => Initialized: " + Interop.IsInitialized.ToString());
+            Print("AFTER => Initialized: " + Interop.IsInitialized.ToString());
             Assert.True(Interop.IsInitialized, "Interop.IsInitialized");
         }
 
         [Fact]
         public void VersionTest01()
         {
+            Interop.Initialize();
             var nngVersionPtr = Interop.nng_version();
 
             Assert.NotEqual(IntPtr.Zero, nngVersionPtr);
@@ -48,6 +47,8 @@ namespace NNG.NETTests.Native
             const int majorVersion = 1;
             const int minorVersion = 0;
             const int patchVersion = 0;
+
+            Interop.Initialize();
 
             var nngVersionPtr = Interop.nng_version();
             var nngVersionStr = Marshal.PtrToStringAnsi(nngVersionPtr);
@@ -71,6 +72,8 @@ namespace NNG.NETTests.Native
         [Fact]
         public void CloseTest01()
         {
+            Interop.Initialize();
+
             nng_socket nngSocket;
             nngSocket.id = 2;
             var res = Interop.nng_close(nngSocket);
@@ -80,6 +83,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public void CloseAllTest01()
         {
+            Interop.Initialize();
             Print("Call nng_closeall");
             Interop.nng_closeall();
         }
@@ -88,6 +92,7 @@ namespace NNG.NETTests.Native
         public void AllocTest01()
         {
             const int bufSize = 512;
+            Interop.Initialize();
             var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
             Assert.NotEqual(IntPtr.Zero, nngAlloc);
 
@@ -116,6 +121,7 @@ namespace NNG.NETTests.Native
         public void AllocAndFreeTest01()
         {
             const int bufSize = 512;
+            Interop.Initialize();
             var nngAlloc = Interop.nng_alloc(new UIntPtr(bufSize));
             Assert.NotEqual(IntPtr.Zero, nngAlloc);
 
@@ -127,6 +133,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public void ReqOpen01()
         {
+            Interop.Initialize();
             var error = Interop.nng_req0_open(out var socket);
 
             Print("ERROR: 0x" + error.ToString("X"));
@@ -138,6 +145,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public void OpenAndClose01()
         {
+            Interop.Initialize();
             var error = Interop.nng_req0_open(out var socket);
 
             Print("ERROR: 0x" + error.ToString("X"));
@@ -154,6 +162,7 @@ namespace NNG.NETTests.Native
         [Fact]
         public unsafe void PipeNotifyCall()
         {
+            Interop.Initialize();
             var error = Interop.nng_pipe_notify(new nng_socket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (pipe, action, arg) => { },
                 IntPtr.Zero.ToPointer());
 
