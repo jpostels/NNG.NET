@@ -48,7 +48,6 @@ namespace NNG.NETTests.Native
             const int majorVersion = 1;
             const int minorVersion = 0;
             const int patchVersion = 0;
-            const string suffix = "rc.1";
 
             var nngVersionPtr = Interop.nng_version();
             var nngVersionStr = Marshal.PtrToStringAnsi(nngVersionPtr);
@@ -67,8 +66,6 @@ namespace NNG.NETTests.Native
             Assert.Equal(majorVersion, major);
             Assert.Equal(minorVersion, minor);
             Assert.Equal(patchVersion, patch);
-
-            Assert.Equal(suffix, presplit[1]);
         }
 
         [Fact]

@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>	
-    <Version>0.1.4</Version>
+    <Version>0.2.1</Version>
     <RootNamespace>NNG</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +18,13 @@
   <ItemGroup>
     <Folder Include="runtimes\linux-x64\native\" />
     <Folder Include="runtimes\linux-x86\native\" />
-    <Folder Include="runtimes\win-x86\native\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="runtimes\win-x64\native\nng.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x86\native\nng.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
