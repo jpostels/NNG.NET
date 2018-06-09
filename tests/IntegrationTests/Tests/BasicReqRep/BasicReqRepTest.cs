@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Transactions;
 using IntegrationTests.Infrastructure;
-using NNG;
+using NNG.ErrorHandling;
 using NNG.Native;
 using NNG.Native.InteropTypes;
 using NNG.Protocols;
@@ -34,8 +31,7 @@ namespace IntegrationTests.Tests.BasicReqRep
 
         private void CreateReplySocket()
         {
-            var thr = new Thread(Reply);
-            thr.Name = "ReplyThread";
+            var thr = new Thread(Reply) { Name = "ReplyThread" };
             thr.Start();
         }
 
@@ -51,7 +47,7 @@ namespace IntegrationTests.Tests.BasicReqRep
                 res = Interop.nng_recv(rep.Socket, ref buf, ref size, nng_flag.NNG_FLAG_ALLOC);
                 AssertResult(res);
 
-                Console.WriteLine("received: " + ((byte*)buf.ToPointer())[0]);
+                Console.WriteLine("received: " + ((byte*)buf.ToPointer())[0].ToString());
                 ((byte*)buf.ToPointer())[0]++;
 
                 res = Interop.nng_send(rep.Socket, buf, size, nng_flag.NNG_FLAG_ALLOC);
@@ -62,8 +58,7 @@ namespace IntegrationTests.Tests.BasicReqRep
         private void CreateRequestSocket()
         {
             Thread.Sleep(10);
-            var thr = new Thread(Request);
-            thr.Name = "RequestThread";
+            var thr = new Thread(Request) { Name = "RequestThread" };
             thr.Start();
         }
 
@@ -88,7 +83,7 @@ namespace IntegrationTests.Tests.BasicReqRep
                 AssertResult(res);
 
                 Console.WriteLine("received: " + ((byte*)ptr.ToPointer())[0].ToString());
-                
+
                 Interop.nng_free(ptr, size);
 
                 IsDone = true;
