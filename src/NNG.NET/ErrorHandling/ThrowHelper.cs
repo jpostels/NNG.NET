@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using NNG.Native;
 
-namespace NNG
+namespace NNG.ErrorHandling
 {
     /// <summary>
     ///     Provides helper methods for throwing library exceptions. 

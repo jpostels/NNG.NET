@@ -1,4 +1,5 @@
 ﻿using System;
+using NNG.ErrorHandling;
 using NNG.Native;
 using NNG.Native.InteropTypes;
 

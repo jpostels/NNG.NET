@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace NNG
+﻿namespace NNG
 {
+    using System;
+
+    using ErrorHandling;
+
     /// <summary>
     ///     Provides information about NNG based errors.
     /// </summary>
