@@ -8,7 +8,7 @@ namespace IntegrationTests
     public static class Program
     {
         public const string PipeName = "integrationTest01";
-        
+
         public static void Main(string[] args)
         {
             while (true)
