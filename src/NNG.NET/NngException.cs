@@ -1,4 +1,6 @@
-﻿namespace NNG
+﻿using NNG.Native.InteropTypes;
+
+namespace NNG
 {
     using System;
 
@@ -16,7 +18,12 @@
         /// <value>
         ///     The error code.
         /// </value>
-        public int ErrorCode { get; }
+        public int ErrorCode => (int) NngErrNo;
+
+        /// <summary>
+        ///     The NNG error number
+        /// </summary>
+        internal readonly nng_errno NngErrNo;
 
         /// <summary>
         ///     Gets the nanomsg error.
@@ -55,9 +62,9 @@
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <param name="errorCode">The error code.</param>
-        public NngException(string message, int errorCode) : base(message)
+        internal NngException(string message, nng_errno errorCode) : base(message)
         {
-            ErrorCode = errorCode;
+            NngErrNo = errorCode;
             NanomsgError = ThrowHelper.GetNanomsgError(errorCode);
         }
 
@@ -67,9 +74,9 @@
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="errorCode">The error code.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public NngException(string message, int errorCode, Exception innerException) : base(message, innerException)
+        internal NngException(string message, nng_errno errorCode, Exception innerException) : base(message, innerException)
         {
-            ErrorCode = errorCode;
+            NngErrNo = errorCode;
             NanomsgError = ThrowHelper.GetNanomsgError(errorCode);
         }
 

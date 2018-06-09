@@ -77,7 +77,10 @@ namespace NNG.NETTests.Native
             nng_socket nngSocket;
             nngSocket.id = 2;
             var res = Interop.nng_close(nngSocket);
-            Print("HRESULT: 0x" + res.ToString("X8"));
+            Print("HRESULT: 0x" + ((int)res).ToString("X8"));
+            Print("FLAG: " + res.ToString("G"));
+
+            Assert.Equal(nng_errno.NNG_ECLOSED, res);
         }
 
         [Fact]
@@ -139,7 +142,7 @@ namespace NNG.NETTests.Native
             Print("ERROR: 0x" + error.ToString("X"));
             Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
 
-            Assert.Equal(0, error);
+            Assert.Equal(nng_errno.NNG_SUCCESS, error);
         }
 
         [Fact]
@@ -151,12 +154,12 @@ namespace NNG.NETTests.Native
             Print("ERROR: 0x" + error.ToString("X"));
             Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
 
-            Assert.Equal(0, error);
+            Assert.Equal(nng_errno.NNG_SUCCESS, error);
 
             var error2 = Interop.nng_close(socket);
 
             Print("ERROR: 0x" + error2.ToString("X"));
-            Assert.Equal(0, error2);
+            Assert.Equal(nng_errno.NNG_SUCCESS, error2);
         }
 
         [Fact]

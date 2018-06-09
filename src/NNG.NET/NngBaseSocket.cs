@@ -38,7 +38,7 @@ namespace NNG
         /// </summary>
         /// <param name="socket">The socket.</param>
         /// <returns></returns>
-        internal delegate int SocketOpenFunction(out nng_socket socket);
+        internal delegate nng_errno SocketOpenFunction(out nng_socket socket);
 
         /// <summary>
         ///     Opens a socket with the specified <paramref name="openFunction"/>
@@ -51,7 +51,7 @@ namespace NNG
         /// </exception>
         internal void Open(SocketOpenFunction openFunction)
         {
-            int result;
+            nng_errno result;
             nng_socket socket;
             try
             {
@@ -78,7 +78,7 @@ namespace NNG
         /// <summary>
         ///     Closes the underlying socket.
         /// </summary>
-        internal int Close()
+        internal nng_errno Close()
         {
             return Interop.nng_close(Socket);
         }

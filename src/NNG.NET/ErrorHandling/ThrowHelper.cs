@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using NNG.Native;
+using NNG.Native.InteropTypes;
 
 namespace NNG.ErrorHandling
 {
@@ -16,7 +17,23 @@ namespace NNG.ErrorHandling
         /// <returns>
         ///     Returns the error description if there is one; Otherwise an empty string.
         /// </returns>
-        public static string GetNanomsgError(int errorCode) => Interop.nng_strerror(errorCode);
+        public static string GetNanomsgError(nng_errno errorCode) => Interop.nng_strerror((int)errorCode);
+
+        /// <summary>
+        ///     Throws an exception with the specified <paramref name="errorCode"/>,
+        ///     if it does not match <see cref="nng_errno.NNG_SUCCESS"/>.
+        /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <exception cref="NngException"></exception>
+        public static void ThrowIfNotSuccess(nng_errno errorCode)
+        {
+            if (errorCode == nng_errno.NNG_SUCCESS)
+            {
+                return;
+            }
+
+            Throw(errorCode);
+        }
 
         /// <summary>
         ///     Throws an exception with the specified <paramref name="errorCode"/>.
@@ -25,7 +42,7 @@ namespace NNG.ErrorHandling
         /// <param name="message">The message.</param>
         /// <param name="source">The source.</param>
         /// <exception cref="NngException"></exception>
-        public static void Throw(int errorCode, string message = null, [CallerMemberName] string source = null)
+        public static void Throw(nng_errno errorCode, string message = null, [CallerMemberName] string source = null)
         {
             if (string.IsNullOrEmpty(message))
             {

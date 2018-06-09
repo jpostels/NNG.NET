@@ -117,16 +117,42 @@
         /// </remarks>
         public const int NngMaxAddressLength = 128;
 
+        /// <summary>
+        ///     The nng_fini function is used to terminate the library, freeing certain global resources.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        ///     This should only be called during atexit() or just before dlclose().
+        /// </para>
+        /// <para>
+        ///     THIS FUNCTION MUST NOT BE CALLED CONCURRENTLY WITH ANY OTHER FUNCTION
+        ///     IN THIS LIBRARY; IT IS NOT REENTRANT OR THREADSAFE.
+        /// </para>
+        /// <para>
+        ///     For most cases, this call is unnecessary, but it is provided to assist
+        ///     when debugging with memory checkers (e.g. valgrind).  Calling this
+        ///     function prevents global library resources from being reported incorrectly
+        ///     as memory leaks.  In those cases, we recommend doing this with atexit().
+        /// </para>
+        /// </remarks>
         [DllImport(LibraryName, EntryPoint = "nng_fini")]
         public static extern void nng_fini();
 
         /// <summary>
-        ///     Close socket
+        ///     The nng_close function closes the supplied socket.
+        ///     Messages that have been submitted for sending may be flushed or delivered,
+        ///     depending upon the transport and the setting of the NNG_OPT_LINGER option.
+        ///     Further attempts to use the socket after this call returns will result in <see cref="nng_errno.NNG_ECLOSED"/>.
+        ///     Threads waiting for operations on the socket when this call is executed
+        ///     may also return with an <see cref="nng_errno.NNG_ECLOSED"/> result.
         /// </summary>
         /// <param name="socketId">The socket.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     This function returns 0 on success, and non-zero otherwise.
+        ///     <see cref="nng_errno.NNG_ECLOSED"/>: The socket is already closed or was never opened.
+        /// </returns>
         [DllImport(LibraryName, EntryPoint = "nng_close")]
-        public static extern int nng_close(nng_socket socketId);
+        public static extern nng_errno nng_close(nng_socket socketId);
 
         [DllImport(LibraryName, EntryPoint = "nng_socket_id")]
         public static extern int nng_socket_id(nng_socket socketId);
@@ -137,85 +163,85 @@
         #region nng setopt
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_setopt(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
+        public static extern unsafe nng_errno nng_setopt(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_bool(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno nng_setopt_bool(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_int(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno nng_setopt_int(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_size(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno nng_setopt_size(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_ms(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
+        public static extern nng_errno nng_setopt_ms(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_uint64(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
+        public static extern nng_errno nng_setopt_uint64(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_setopt_string(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern nng_errno nng_setopt_string(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_setopt_ptr(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* ptr);
+        public static extern unsafe nng_errno nng_setopt_ptr(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* ptr);
 
         #endregion
 
         #region nng getopt
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_getopt(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, out UIntPtr size);
+        public static extern unsafe nng_errno nng_getopt(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, out UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_bool(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno nng_getopt_bool(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_int(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno nng_getopt_int(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_ms(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
+        public static extern nng_errno nng_getopt_ms(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_size(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
+        public static extern nng_errno nng_getopt_size(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_uint64(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
+        public static extern nng_errno nng_getopt_uint64(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_ptr(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
+        public static extern nng_errno nng_getopt_ptr(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_getopt_string(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
+        public static extern nng_errno nng_getopt_string(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
 
         #endregion
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* args);
+        public static extern unsafe nng_errno nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* args);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno nng_listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dial(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno nng_dial(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_create([Out, In] ref nng_dialer dialer, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno nng_dialer_create([Out, In] ref nng_dialer dialer, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_create([Out, In] ref nng_listener listener, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno nng_listener_create([Out, In] ref nng_listener listener, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_start(nng_dialer dialer, int flags);
+        public static extern nng_errno nng_dialer_start(nng_dialer dialer, int flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_start(nng_listener listener, int flags);
+        public static extern nng_errno nng_listener_start(nng_listener listener, int flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_close(nng_dialer dialer);
+        public static extern nng_errno nng_dialer_close(nng_dialer dialer);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_close(nng_listener listener);
+        public static extern nng_errno nng_listener_close(nng_listener listener);
 
         [DllImport(LibraryName)]
         public static extern int nng_dialer_id(nng_dialer listener);
@@ -224,122 +250,122 @@
         public static extern int nng_listener_id(nng_listener listener);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
+        public static extern nng_errno nng_dialer_setopt(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_bool(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno nng_dialer_setopt_bool(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_int(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno nng_dialer_setopt_int(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_ms(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
+        public static extern nng_errno nng_dialer_setopt_ms(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_size(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno nng_dialer_setopt_size(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_uint64(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
+        public static extern nng_errno nng_dialer_setopt_uint64(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_ptr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value);
+        public static extern nng_errno nng_dialer_setopt_ptr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_setopt_string(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern nng_errno nng_dialer_setopt_string(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
+        public static extern nng_errno nng_dialer_getopt(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_bool(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno nng_dialer_getopt_bool(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_int(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno nng_dialer_getopt_int(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_ms(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
+        public static extern nng_errno nng_dialer_getopt_ms(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_size(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
+        public static extern nng_errno nng_dialer_getopt_size(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_sockaddr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr value);
+        public static extern nng_errno nng_dialer_getopt_sockaddr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_uint64(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
+        public static extern nng_errno nng_dialer_getopt_uint64(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_ptr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
+        public static extern nng_errno nng_dialer_getopt_ptr(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_dialer_getopt_string(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
+        public static extern nng_errno nng_dialer_getopt_string(nng_dialer dialer, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
+        public static extern nng_errno nng_listener_setopt(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_bool(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno nng_listener_setopt_bool(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_int(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno nng_listener_setopt_int(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_ms(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
+        public static extern nng_errno nng_listener_setopt_ms(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_size(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno nng_listener_setopt_size(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_uint64(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
+        public static extern nng_errno nng_listener_setopt_uint64(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_ptr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value);
+        public static extern nng_errno nng_listener_setopt_ptr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_setopt_string(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern nng_errno nng_listener_setopt_string(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
+        public static extern nng_errno nng_listener_getopt(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_bool(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno nng_listener_getopt_bool(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_int(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno nng_listener_getopt_int(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_ms(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
+        public static extern nng_errno nng_listener_getopt_ms(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_size(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
+        public static extern nng_errno nng_listener_getopt_size(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_sockaddr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr value);
+        public static extern nng_errno nng_listener_getopt_sockaddr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_uint64(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
+        public static extern nng_errno nng_listener_getopt_uint64(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_ptr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
+        public static extern nng_errno nng_listener_getopt_ptr(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_listener_getopt_string(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
+        public static extern nng_errno nng_listener_getopt_string(nng_listener listener, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
 
         [DllImport(LibraryName, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.LPWStr)]
         public static extern string nng_strerror(int errorCode);
 
         [DllImport(LibraryName)]
-        public static extern int nng_send(nng_socket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno nng_send(nng_socket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_recv(nng_socket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno nng_recv(nng_socket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName)]
-        public static extern int nng_sendmsg(nng_socket socketId, ref nng_msg message, int flags);
+        public static extern nng_errno nng_sendmsg(nng_socket socketId, ref nng_msg message, int flags);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_recvmsg(nng_socket socketId, ref nng_msg* message, int flags);
+        public static extern unsafe nng_errno nng_recvmsg(nng_socket socketId, ref nng_msg* message, int flags);
 
         [DllImport(LibraryName)]
         public static extern void nng_send_aio(nng_socket socketId, ref nng_aio aio);
@@ -350,10 +376,10 @@
         #region Context support
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_open([Out, In] ref nng_ctx ctx, nng_socket socket);
+        public static extern nng_errno nng_ctx_open([Out, In] ref nng_ctx ctx, nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_close(nng_ctx ctx);
+        public static extern nng_errno nng_ctx_close(nng_ctx ctx);
 
         [DllImport(LibraryName)]
         public static extern int nng_ctx_id(nng_ctx ctx);
@@ -365,34 +391,34 @@
         public static extern void nng_ctx_send(nng_ctx ctx, ref nng_aio aio);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_getopt(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
+        public static extern nng_errno nng_ctx_getopt(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_getopt_bool(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno nng_ctx_getopt_bool(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_getopt_int(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno nng_ctx_getopt_int(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_getopt_ms(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
+        public static extern nng_errno nng_ctx_getopt_ms(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_getopt_size(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
+        public static extern nng_errno nng_ctx_getopt_size(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_setopt(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref IntPtr value, UIntPtr size);
+        public static extern nng_errno nng_ctx_setopt(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref IntPtr value, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_setopt_bool(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno nng_ctx_setopt_bool(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_setopt_int(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno nng_ctx_setopt_int(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_setopt_ms(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration duration);
+        public static extern nng_errno nng_ctx_setopt_ms(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration duration);
 
         [DllImport(LibraryName)]
-        public static extern int nng_ctx_setopt_size(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno nng_ctx_setopt_size(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
         #endregion
 
@@ -415,7 +441,7 @@
         public unsafe delegate void AioAllocCallback(void* ptr);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_aio_alloc([Out, In] ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, void* args);
+        public static extern unsafe nng_errno nng_aio_alloc([Out, In] ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, void* args);
 
         [DllImport(LibraryName)]
         public static extern void nng_aio_free(ref nng_aio aio);
@@ -424,7 +450,7 @@
         public static extern void nng_aio_stop(ref nng_aio aio);
 
         [DllImport(LibraryName)]
-        public static extern int nng_aio_result(ref nng_aio aio);
+        public static extern nng_errno nng_aio_result(ref nng_aio aio);
 
         [DllImport(LibraryName)]
         public static extern UIntPtr nng_aio_count(ref nng_aio aio);
@@ -445,13 +471,13 @@
         public static extern ref nng_msg nng_aio_get_msg(ref nng_aio aio);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_aio_set_input(ref nng_aio aio, uint index, void* arg);
+        public static extern unsafe nng_errno nng_aio_set_input(ref nng_aio aio, uint index, void* arg);
 
         [DllImport(LibraryName)]
         public static extern unsafe void* nng_aio_get_input(ref nng_aio aio, uint index);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_aio_set_output(ref nng_aio aio, uint index, void* arg);
+        public static extern unsafe nng_errno nng_aio_set_output(ref nng_aio aio, uint index, void* arg);
 
         [DllImport(LibraryName)]
         public static extern unsafe void* nng_aio_get_output(ref nng_aio aio, uint index);
@@ -460,7 +486,7 @@
         public static extern void nng_aio_set_timeout(ref nng_aio aio, nng_duration timeout);
 
         [DllImport(LibraryName)]
-        public static extern int nng_aio_set_iov(ref nng_aio aio, uint niov, in nng_iov iov);
+        public static extern nng_errno nng_aio_set_iov(ref nng_aio aio, uint niov, in nng_iov iov);
 
         [DllImport(LibraryName)]
         public static extern void nng_aio_finish(ref nng_aio aio, int rv);
@@ -473,13 +499,13 @@
         #region Message API
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_alloc([Out, In] ref nng_msg* msg, UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_alloc([Out, In] ref nng_msg* msg, UIntPtr size);
 
         [DllImport(LibraryName)]
         public static extern void nng_msg_free(ref nng_msg msg);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_realloc(ref nng_msg msg, UIntPtr size);
+        public static extern nng_errno nng_msg_realloc(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName)]
         public static extern unsafe void* nng_msg_header(ref nng_msg msg);
@@ -494,55 +520,55 @@
         public static extern UIntPtr nng_msg_len(in nng_msg msg);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_append(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_append(ref nng_msg msg, void* data, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_insert(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_insert(ref nng_msg msg, void* data, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_trim(ref nng_msg msg, UIntPtr size);
+        public static extern nng_errno nng_msg_trim(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_chop(ref nng_msg msg, UIntPtr size);
+        public static extern nng_errno nng_msg_chop(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_header_append(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_header_append(ref nng_msg msg, void* data, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_header_insert(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_header_insert(ref nng_msg msg, void* data, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_trim(ref nng_msg msg, UIntPtr size);
+        public static extern nng_errno nng_msg_header_trim(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_chop(ref nng_msg msg, UIntPtr size);
+        public static extern nng_errno nng_msg_header_chop(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_append_u32(ref nng_msg msg, uint val);
+        public static extern nng_errno nng_msg_header_append_u32(ref nng_msg msg, uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_insert_u32(ref nng_msg msg, uint val);
+        public static extern nng_errno nng_msg_header_insert_u32(ref nng_msg msg, uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_chop_u32(ref nng_msg msg, ref uint val);
+        public static extern nng_errno nng_msg_header_chop_u32(ref nng_msg msg, ref uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_header_trim_u32(ref nng_msg msg, ref uint val);
+        public static extern nng_errno nng_msg_header_trim_u32(ref nng_msg msg, ref uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_append_u32(ref nng_msg msg, uint val);
+        public static extern nng_errno nng_msg_append_u32(ref nng_msg msg, uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_insert_u32(ref nng_msg msg, uint val);
+        public static extern nng_errno nng_msg_insert_u32(ref nng_msg msg, uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_chop_u32(ref nng_msg msg, ref uint val);
+        public static extern nng_errno nng_msg_chop_u32(ref nng_msg msg, ref uint val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_msg_trim_u32(ref nng_msg msg, ref uint val);
+        public static extern nng_errno nng_msg_trim_u32(ref nng_msg msg, ref uint val);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_dup(ref nng_msg* msgDuplicate, ref nng_msg msgSource);
+        public static extern unsafe nng_errno nng_msg_dup(ref nng_msg* msgDuplicate, ref nng_msg msgSource);
 
         [DllImport(LibraryName)]
         public static extern void nng_msg_clear(ref nng_msg msg);
@@ -557,41 +583,41 @@
         public static extern nng_pipe nng_msg_get_pipe(ref nng_msg msg);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_msg_getopt(ref nng_msg msg, int opt, void* ptr, ref UIntPtr size);
+        public static extern unsafe nng_errno nng_msg_getopt(ref nng_msg msg, int opt, void* ptr, ref UIntPtr size);
 
         #endregion
 
         #region Pipe API
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_pipe_getopt(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* ptr, out UIntPtr size);
+        public static extern unsafe nng_errno nng_pipe_getopt(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* ptr, out UIntPtr size);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_bool(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool val);
+        public static extern nng_errno nng_pipe_getopt_bool(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_int(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int val);
+        public static extern nng_errno nng_pipe_getopt_int(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_ms(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
+        public static extern nng_errno nng_pipe_getopt_ms(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_size(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr val);
+        public static extern nng_errno nng_pipe_getopt_size(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_sockaddr(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr val);
+        public static extern nng_errno nng_pipe_getopt_sockaddr(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_uint64(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong val);
+        public static extern nng_errno nng_pipe_getopt_uint64(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong val);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_pipe_getopt_ptr(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* val);
+        public static extern unsafe nng_errno nng_pipe_getopt_ptr(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_getopt_string(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string val);
+        public static extern nng_errno nng_pipe_getopt_string(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string val);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pipe_close(nng_pipe pipe);
+        public static extern nng_errno nng_pipe_close(nng_pipe pipe);
 
         [DllImport(LibraryName)]
         public static extern int nng_pipe_id(nng_pipe pipe);
@@ -617,16 +643,16 @@
         //BUG the following methods are not yet implemented by nng
 
         //[DllImport(LibraryName)]
-        //public static extern unsafe int nng_snapshot_create(nng_socket socket, ref nng_snapshot* snapshot);
+        //public static extern unsafe nng_errno nng_snapshot_create(nng_socket socket, ref nng_snapshot* snapshot);
 
         //[DllImport(LibraryName)]
         //public static extern void nng_snapshot_free(ref nng_snapshot snapshot);
 
         //[DllImport(LibraryName)]
-        //public static extern int nng_snapshot_update(ref nng_snapshot snapshot);
+        //public static extern nng_errno nng_snapshot_update(ref nng_snapshot snapshot);
 
         //[DllImport(LibraryName)]
-        //public static extern unsafe int nng_snapshot_next(ref nng_snapshot snapshot, ref nng_stat* stat);
+        //public static extern unsafe nng_errno nng_snapshot_next(ref nng_snapshot snapshot, ref nng_stat* stat);
 
         //[DllImport(LibraryName)]
         //[return: MarshalAs(UnmanagedType.LPStr)]
@@ -646,18 +672,18 @@
         #endregion
 
         [DllImport(LibraryName)]
-        public static extern int nng_device(nng_socket socket1, nng_socket socket2);
+        public static extern nng_errno nng_device(nng_socket socket1, nng_socket socket2);
 
         #region URL support
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_parse(out nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
+        public static extern unsafe nng_errno nng_url_parse(out nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
 
         [DllImport(LibraryName)]
         public static extern void nng_url_free(ref nng_url url);
 
         [DllImport(LibraryName)]
-        public static extern unsafe int nng_url_clone(out nng_url* urlDuplicate, ref nng_url urlSource);
+        public static extern unsafe nng_errno nng_url_clone(out nng_url* urlDuplicate, ref nng_url urlSource);
 
         #endregion
 
@@ -671,89 +697,89 @@
         #region protocols
 
         [DllImport(LibraryName)]
-        public static extern int nng_req0_open(out nng_socket socket);
+        public static extern nng_errno nng_req0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_req0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_req0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_rep0_open(out nng_socket socket);
+        public static extern nng_errno nng_rep0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_rep0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_rep0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_surveyor0_open(out nng_socket socket);
+        public static extern nng_errno nng_surveyor0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_surveyor0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_surveyor0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_respondent0_open(out nng_socket socket);
+        public static extern nng_errno nng_respondent0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_respondent0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_respondent0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pub0_open(out nng_socket socket);
+        public static extern nng_errno nng_pub0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pub0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_pub0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_sub0_open(out nng_socket socket);
+        public static extern nng_errno nng_sub0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_sub0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_sub0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_push0_open(out nng_socket socket);
+        public static extern nng_errno nng_push0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_push0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_push0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pull0_open(out nng_socket socket);
+        public static extern nng_errno nng_pull0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pull0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_pull0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pair0_open(out nng_socket socket);
+        public static extern nng_errno nng_pair0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pair0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_pair0_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pair1_open(out nng_socket socket);
+        public static extern nng_errno nng_pair1_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_pair1_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_pair1_open_raw(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_bus0_open(out nng_socket socket);
+        public static extern nng_errno nng_bus0_open(out nng_socket socket);
 
         [DllImport(LibraryName)]
-        public static extern int nng_bus0_open_raw(out nng_socket socket);
+        public static extern nng_errno nng_bus0_open_raw(out nng_socket socket);
 
         #endregion
 
         /*#region transports
         
         [DllImport(LibraryName)]
-        public static extern int nng_inproc_register();
+        public static extern nng_errno nng_inproc_register();
 
         [DllImport(LibraryName)]
-        public static extern int nng_ipc_register();
+        public static extern nng_errno nng_ipc_register();
 
         [DllImport(LibraryName)]
-        public static extern int nng_tcp_register();
+        public static extern nng_errno nng_tcp_register();
 
         [DllImport(LibraryName)]
-        public static extern int nng_ws_register();
+        public static extern nng_errno nng_ws_register();
 
         [DllImport(LibraryName)]
-        public static extern int nng_wss_register();
+        public static extern nng_errno nng_wss_register();
         
         #endregion*/
 

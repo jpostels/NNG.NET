@@ -90,9 +90,9 @@ namespace IntegrationTests.Tests.BasicReqRep
             }
         }
 
-        private static void AssertResult(int errorCode)
+        private static void AssertResult(nng_errno errorCode)
         {
-            if (errorCode == 0)
+            if (errorCode == nng_errno.NNG_SUCCESS)
             {
                 return;
             }
