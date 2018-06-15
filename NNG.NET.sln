@@ -12,13 +12,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{92E84E39-A53C-42FB-AAB5-8F51E2DDF92F}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NNG.NET", "src\NNG.NET\NNG.NET.csproj", "{542C9F00-8691-410C-98E1-C568CD8DF486}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NNG.NETTests", "tests\NNG.NETTests\NNG.NETTests.csproj", "{DEA81A63-E269-43F7-9E4F-D958BA1BA3DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{0C915A64-9986-499D-B30C-6645DEF1DA78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{0C915A64-9986-499D-B30C-6645DEF1DA78}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pkg", "pkg", "{7D8A1956-787C-40C7-BD0C-D5854718E82E}"
+EndProject
+Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "NNG.NET.Native", "pkg\NNG.NET.Native\NNG.NET.Native.nuproj", "{C2E998F7-5A82-4376-9BF2-140830818F41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +71,18 @@ Global
 		{0C915A64-9986-499D-B30C-6645DEF1DA78}.Release|x64.Build.0 = Release|Any CPU
 		{0C915A64-9986-499D-B30C-6645DEF1DA78}.Release|x86.ActiveCfg = Release|Any CPU
 		{0C915A64-9986-499D-B30C-6645DEF1DA78}.Release|x86.Build.0 = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|x64.Build.0 = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|x64.ActiveCfg = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|x64.Build.0 = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2E998F7-5A82-4376-9BF2-140830818F41}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +91,7 @@ Global
 		{542C9F00-8691-410C-98E1-C568CD8DF486} = {D43A13A4-4C63-42C2-A048-FE70F9048787}
 		{DEA81A63-E269-43F7-9E4F-D958BA1BA3DE} = {80B92ED5-035F-4F15-B0DA-B44943F60504}
 		{0C915A64-9986-499D-B30C-6645DEF1DA78} = {80B92ED5-035F-4F15-B0DA-B44943F60504}
+		{C2E998F7-5A82-4376-9BF2-140830818F41} = {7D8A1956-787C-40C7-BD0C-D5854718E82E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6B6B069-4367-48E0-B48D-2FEDF8F6A444}
