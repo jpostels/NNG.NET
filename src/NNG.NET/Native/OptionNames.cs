@@ -1,13 +1,133 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NNGNET.Native
 {
+    public enum SocketOption
+    {
+        SocketName,
+
+        Raw,
+
+        Protocol,
+
+        ProtocolName,
+
+        Peer,
+
+        PeerName,
+
+        ReceiveBuffer,
+
+        SendBuffer,
+
+        ReceiveFileDescriptor,
+
+        SendFileDescriptor,
+
+        ReceiveTimeout,
+
+        SendTimeout,
+
+        LocalAddress,
+
+        RemoteAddress,
+
+        Url,
+
+        MaxTTL,
+
+        ReceiveMaximumSize,
+
+        ReconnectTimeMin,
+
+        ReconnectTimeMax,
+
+        TcpNoDelay,
+
+        TcpKeepAlive,
+
+        TlsConfig,
+
+        TlsAuthMode,
+
+        TlsCertKeyFile,
+
+        TlsCaFile,
+
+        TlsServerName,
+
+        TlsVerified,
+    }
+
     /// <summary>
     ///     Name of options as used in nng
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native names of library")]
     public static class OptionNames
     {
+        private static readonly Dictionary<SocketOption, string> _nameByEnumDictionary = new Dictionary<SocketOption, string>
+        {
+            {SocketOption.SocketName, NNG_OPT_SOCKNAME},
+            {SocketOption.Raw, NNG_OPT_RAW},
+            {SocketOption.Protocol, NNG_OPT_PROTO},
+            {SocketOption.ProtocolName, NNG_OPT_PROTONAME},
+            {SocketOption.Peer, NNG_OPT_PEER},
+            {SocketOption.PeerName, NNG_OPT_PEERNAME},
+            {SocketOption.ReceiveBuffer, NNG_OPT_RECVBUF},
+            {SocketOption.SendBuffer, NNG_OPT_SENDBUF},
+            {SocketOption.ReceiveFileDescriptor, NNG_OPT_RECVFD},
+            {SocketOption.SendFileDescriptor, NNG_OPT_SENDFD},
+            {SocketOption.ReceiveTimeout, NNG_OPT_RECVTIMEO},
+            {SocketOption.SendTimeout, NNG_OPT_SENDTIMEO},
+            {SocketOption.LocalAddress, NNG_OPT_LOCADDR},
+            {SocketOption.RemoteAddress, NNG_OPT_REMADDR},
+            {SocketOption.Url, NNG_OPT_URL},
+            {SocketOption.MaxTTL, NNG_OPT_MAXTTL},
+            {SocketOption.ReceiveMaximumSize, NNG_OPT_RECVMAXSZ},
+            {SocketOption.ReconnectTimeMin, NNG_OPT_RECONNMINT},
+            {SocketOption.ReconnectTimeMax, NNG_OPT_RECONNMAXT},
+            {SocketOption.TcpNoDelay, NNG_OPT_TCP_NODELAY},
+            {SocketOption.TcpKeepAlive, NNG_OPT_TCP_KEEPALIVE},
+            {SocketOption.TlsConfig, NNG_OPT_TLS_CONFIG},
+            {SocketOption.TlsAuthMode, NNG_OPT_TLS_AUTH_MODE},
+            {SocketOption.TlsCertKeyFile, NNG_OPT_TLS_CERT_KEY_FILE},
+            {SocketOption.TlsCaFile, NNG_OPT_TLS_CA_FILE},
+            {SocketOption.TlsServerName, NNG_OPT_TLS_SERVER_NAME},
+            {SocketOption.TlsVerified, NNG_OPT_TLS_VERIFIED},
+        };
+
+        private static readonly Dictionary<string, SocketOption> _enumByNameDictionary = new Dictionary<string, SocketOption>();
+
+        /// <summary>
+        ///     Initializes the <see cref="OptionNames"/> class.
+        /// </summary>
+        static OptionNames()
+        {
+            foreach (var kvp in _nameByEnumDictionary)
+            {
+                _enumByNameDictionary.Add(kvp.Value, kvp.Key);
+            }
+        }
+
+        /// <summary>
+        ///     Gets the option name specified by the given <paramref name="option"/>.
+        /// </summary>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A string with the option name, which can be used for interfacing the native API.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static string GetNameByEnum(SocketOption option)
+        {
+            return _nameByEnumDictionary[option];
+        }
+
         public const string NNG_OPT_SOCKNAME = "socket-name";
 
         public const string NNG_OPT_RAW = "raw";
