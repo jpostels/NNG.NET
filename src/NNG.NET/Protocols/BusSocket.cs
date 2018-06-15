@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class BusSocket : NngBaseSocket
     {

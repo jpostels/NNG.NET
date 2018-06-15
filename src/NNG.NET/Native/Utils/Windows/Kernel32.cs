@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace NNG.Native.Utils.Windows
+namespace NNGNET.Native.Utils.Windows
 {
     internal static class Kernel32
     {

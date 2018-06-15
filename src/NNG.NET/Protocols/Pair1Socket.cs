@@ -1,6 +1,6 @@
-﻿using NNG.Native;
+﻿using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class Pair1Socket : NngBaseSocket
     {

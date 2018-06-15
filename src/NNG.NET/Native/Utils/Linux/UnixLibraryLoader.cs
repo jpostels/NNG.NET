@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NNG.Utilities;
+using NNGNET.Utilities;
 
-namespace NNG.Native.Utils.Linux
+namespace NNGNET.Native.Utils.Linux
 {
     /// <summary>
     ///     Provides the means to load a shared library on a unix system.

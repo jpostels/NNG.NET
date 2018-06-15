@@ -1,4 +1,4 @@
-﻿namespace NNG.Utilities
+﻿namespace NNGNET.Utilities
 {
     /// <summary>
     ///     Provides a dictionary like behaviour with a type as a lookup key.

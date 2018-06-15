@@ -3,12 +3,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FluentAssertions;
-using NNG.Native;
-using NNG.Native.InteropTypes;
+using NNGNET.Native;
+using NNGNET.Native.InteropTypes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NNG.NETTests.Native
+namespace NNGNET.NETTests.Native
 {
     public class InteropTests : TestOutputBase
     {

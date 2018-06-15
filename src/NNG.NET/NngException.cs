@@ -1,6 +1,6 @@
-﻿using NNG.Native.InteropTypes;
+﻿using NNGNET.Native.InteropTypes;
 
-namespace NNG
+namespace NNGNET
 {
     using System;
 

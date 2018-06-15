@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once UnusedMember.Global

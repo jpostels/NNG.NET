@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using NNG.Native;
-using NNG.Native.InteropTypes;
+using NNGNET.Native;
+using NNGNET.Native.InteropTypes;
 
-namespace NNG.ErrorHandling
+namespace NNGNET.ErrorHandling
 {
     /// <summary>
     ///     Provides helper methods for throwing library exceptions. 

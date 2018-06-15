@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native names of library")]
     [SuppressMessage("ReSharper", "EnumUnderlyingTypeIsInt", Justification = "Being explicit here.")]

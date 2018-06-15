@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     /// <summary>
     ///     nng_stat_unit provides information about the unit for the statistic,

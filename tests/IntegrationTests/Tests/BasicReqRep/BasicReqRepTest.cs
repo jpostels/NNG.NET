@@ -2,10 +2,11 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using IntegrationTests.Infrastructure;
-using NNG.ErrorHandling;
-using NNG.Native;
-using NNG.Native.InteropTypes;
-using NNG.Protocols;
+using NNGNET;
+using NNGNET.ErrorHandling;
+using NNGNET.Native;
+using NNGNET.Native.InteropTypes;
+using NNGNET.Protocols;
 
 namespace IntegrationTests.Tests.BasicReqRep
 {

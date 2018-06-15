@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
-using NNG.Utilities;
+using NNGNET.Utilities;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace NNG.NETTests.Utilities
+namespace NNGNET.NETTests.Utilities
 {
     public class TypeDictionaryTests : TestOutputBase
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using NNG.Utilities;
+using NNGNET.Utilities;
 
-namespace NNG.Native.Utils.Windows
+namespace NNGNET.Native.Utils.Windows
 {
     /// <summary>
     ///     Provides the means to load a dynamic library on a windows system.

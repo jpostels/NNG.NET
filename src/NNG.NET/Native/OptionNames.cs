@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NNG.Native
+namespace NNGNET.Native
 {
     /// <summary>
     ///     Name of options as used in nng

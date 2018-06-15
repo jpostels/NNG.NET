@@ -1,9 +1,9 @@
 ﻿using System;
-using NNG.ErrorHandling;
-using NNG.Native;
-using NNG.Native.InteropTypes;
+using NNGNET.ErrorHandling;
+using NNGNET.Native;
+using NNGNET.Native.InteropTypes;
 
-namespace NNG
+namespace NNGNET
 {
     /// <summary>
     ///     Base class for shared functionality between protocols.

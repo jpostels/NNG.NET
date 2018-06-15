@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NNG.Native.Utils.Linux
+namespace NNGNET.Native.Utils.Linux
 {
     /// <summary>
     ///     Provides error information about a failed library load attempt.

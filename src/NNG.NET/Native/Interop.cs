@@ -1,4 +1,4 @@
-﻿namespace NNG.Native
+﻿namespace NNGNET.Native
 {
     using System;
     using System.Runtime.InteropServices;

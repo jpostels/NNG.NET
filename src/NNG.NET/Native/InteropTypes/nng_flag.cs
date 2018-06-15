@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     public enum nng_flag : int
