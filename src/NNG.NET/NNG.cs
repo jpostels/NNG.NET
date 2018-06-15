@@ -6,6 +6,11 @@
     using ErrorHandling;
     using Native.InteropTypes;
 
+    /// <summary>
+    ///     Safe provider for P/Invoke of nng library functions.
+    ///     Also handles possible error return values and throws them as <see cref="NngException"/>.
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "API Provider. All member implicitly used.")]
     public static class NNG
     {
         /// <summary>
@@ -80,10 +85,7 @@
         public static void Close(NNGSocket socket)
         {
             var err = Interop.Close(socket);
-            if (err != nng_errno.NNG_SUCCESS)
-            {
-                throw ThrowHelper.GetExceptionForErrorCode(err);
-            }
+            ThrowHelper.ThrowIfNotSuccess(err);
         }
 
         /// <summary>
@@ -107,5 +109,268 @@
         ///     Do not call this from a library; it will affect all sockets.
         /// </remarks>
         public static void CloseAll() => Interop.CloseAll();
+
+        #region Set Socket options
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="pointer">The pointer.</param>
+        /// <param name="size">The size.</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The value being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified option is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, IntPtr pointer, uint size)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, pointer, new UIntPtr(size));
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, bool value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, int value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, UIntPtr value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, TimeSpan value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOptionDuration(socket, optionName, value.Milliseconds);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, ulong value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="value">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="value"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOption(NNGSocket socket, SocketOption option, string value)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOption(socket, optionName, value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        /// <summary>
+        ///     Sets an option identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">Name of the option.</param>
+        /// <param name="pointer">The value</param>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_EINVAL The <paramref name="pointer"/> being passed is invalid.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_EREADONLY The specified <paramref name="option"/> is read-only.
+        ///     -or-
+        ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static void SetOptionPointer(NNGSocket socket, SocketOption option, IntPtr pointer)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.SetOptionPointer(socket, optionName, pointer);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        #endregion
     }
 }
