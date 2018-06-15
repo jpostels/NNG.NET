@@ -43,6 +43,14 @@ namespace NNG
         /// <summary>
         ///     Initializes a new instance of the <see cref="NngException"/> class.
         /// </summary>
+        /// <param name="errorCode">The code that identifies the error.</param>
+        internal NngException(nng_errno errorCode) : base(ThrowHelper.GetNanomsgError(errorCode))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="NngException"/> class.
+        /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public NngException(string message) : base(message)
         {
@@ -78,19 +86,6 @@ namespace NNG
         {
             NngErrNo = errorCode;
             NanomsgError = ThrowHelper.GetNanomsgError(errorCode);
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NngException"/> class.
-        /// </summary>
-        /// <param name="info">
-        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        ///     The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.
-        /// </param>
-        protected NngException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
-        {
         }
     }
 }

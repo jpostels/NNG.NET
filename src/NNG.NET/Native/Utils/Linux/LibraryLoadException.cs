@@ -52,11 +52,6 @@ namespace NNG.Native.Utils.Linux
         }
 
         /// <inheritdoc />
-        protected LibraryLoadException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
-        {
-        }
-
-        /// <inheritdoc />
         public LibraryLoadException(string message) : base(message)
         {
         }

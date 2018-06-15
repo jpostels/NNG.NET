@@ -39,16 +39,26 @@ namespace IntegrationTests
                 Console.WriteLine("Please select a test to run: ");
                 var line = Console.ReadLine();
 
-                if (line.Contains("exit", StringComparison.InvariantCultureIgnoreCase))
+                if (line.Contains("exit"
+#if !NET47
+                    , StringComparison.InvariantCultureIgnoreCase
+#endif
+                    ))
                 {
                     return false;
                 }
 
+#if NET47
+                if (!int.TryParse(line.Trim(), out var parsed))
+                {
+                    Console.WriteLine("Invalid value: " + line);
+                }
+#else
                 if (!int.TryParse((ReadOnlySpan<char>) line.Trim(), out var parsed))
                 {
                     Console.WriteLine("Invalid value: " + line);
                 }
-
+#endif
                 input = parsed;
             }
 
