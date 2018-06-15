@@ -16,6 +16,8 @@ namespace IntegrationTests.Tests.BasicReqRep
 
         private bool IsDone { get; set; }
 
+        private bool ReplyIsDone { get; set; }
+
         /// <inheritdoc />
         public override void Run()
         {
@@ -55,6 +57,7 @@ namespace IntegrationTests.Tests.BasicReqRep
 
                 res = Interop.Send(rep.Socket, buf, size, nng_flag.NNG_FLAG_ALLOC);
                 AssertResult(res);
+                ReplyIsDone = true;
             }
         }
 

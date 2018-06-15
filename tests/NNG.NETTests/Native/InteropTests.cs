@@ -163,11 +163,10 @@ namespace NNGNET.NETTests.Native
         }
 
         [Fact]
-        public unsafe void PipeNotifyCall()
+        public void PipeNotifyCall()
         {
             Interop.Initialize();
-            var error = Interop.PipeSetNotification(new nng_socket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (pipe, action, arg) => { },
-                IntPtr.Zero.ToPointer());
+            var error = Interop.PipeSetNotification(new nng_socket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (_, __, ___) => { }, IntPtr.Zero);
 
             Print("ERROR: 0x" + error.ToString("X"));
         }

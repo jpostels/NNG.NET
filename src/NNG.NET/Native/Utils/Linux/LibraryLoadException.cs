@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NNGNET.Native.Utils.Linux
 {
@@ -14,14 +15,14 @@ namespace NNGNET.Native.Utils.Linux
         /// <value>
         ///     The search paths.
         /// </value>
-        public string[] SearchPaths { get; }
+        public IList<string> SearchPaths { get; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LibraryLoadException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="searchPaths">The search paths.</param>
-        public LibraryLoadException(string message, string[] searchPaths) : base(message)
+        public LibraryLoadException(string message, IList<string> searchPaths) : base(message)
         {
             SearchPaths = searchPaths;
         }
@@ -32,7 +33,7 @@ namespace NNGNET.Native.Utils.Linux
         /// <param name="message">The message.</param>
         /// <param name="searchPaths">The search paths.</param>
         /// <param name="innerException">The inner exception.</param>
-        public LibraryLoadException(string message, string[] searchPaths, Exception innerException) : base(message, innerException)
+        public LibraryLoadException(string message, IList<string> searchPaths, Exception innerException) : base(message, innerException)
         {
             SearchPaths = searchPaths;
         }
@@ -41,7 +42,7 @@ namespace NNGNET.Native.Utils.Linux
         ///     Initializes a new instance of the <see cref="LibraryLoadException"/> class.
         /// </summary>
         /// <param name="searchPaths">The search paths.</param>
-        public LibraryLoadException(string[] searchPaths)
+        public LibraryLoadException(IList<string> searchPaths)
         {
             SearchPaths = searchPaths;
         }
@@ -58,6 +59,17 @@ namespace NNGNET.Native.Utils.Linux
 
         /// <inheritdoc />
         public LibraryLoadException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LibraryLoadException"/> class.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+        /// <exception cref="ArgumentNullException">The <paramref name="info">info</paramref> parameter is null.</exception>
+        /// <exception cref="System.Runtime.Serialization.SerializationException">The class name is null or <see cref="System.Exception.HResult"></see> is zero (0).</exception>
+        protected LibraryLoadException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
         {
         }
     }

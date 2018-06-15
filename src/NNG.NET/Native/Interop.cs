@@ -1,10 +1,10 @@
 ﻿namespace NNGNET.Native
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
 
     using InteropTypes;
-
     using Utils.Linux;
     using Utils.Windows;
 
@@ -13,8 +13,7 @@
     /// <summary>
     ///     Provider for P/Invoke of nng library functions
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "BuiltInTypeReferenceStyle", Justification = "Using native names")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Supressed")]
+    [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Supressed")]
     internal static class Interop
     {
 #pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
@@ -163,7 +162,7 @@
 #region nng setopt
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt")]
-        public static extern unsafe nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
+        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_bool")]
         public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
@@ -184,14 +183,14 @@
         public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_ptr")]
-        public static extern unsafe nng_errno SetOptionPointer(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* ptr);
+        public static extern nng_errno SetOptionPointer(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr ptr);
 
 #endregion
 
 #region nng getopt
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt")]
-        public static extern unsafe nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, out UIntPtr size);
+        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_bool")]
         public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
@@ -217,7 +216,7 @@
 #endregion
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_notify")]
-        public static extern unsafe nng_errno PipeSetNotification(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* args);
+        public static extern nng_errno PipeSetNotification(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, IntPtr args);
 
         [DllImport(LibraryName, EntryPoint = "nng_listen")]
         public static extern nng_errno Listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
@@ -438,10 +437,10 @@
 #region AIO
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate void AioAllocCallback(void* ptr);
+        public delegate void AioAllocCallback(IntPtr ptr);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_alloc")]
-        public static extern unsafe nng_errno AioAlloc([Out, In] ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, void* args);
+        public static extern unsafe nng_errno AioAlloc([Out, In] ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, IntPtr args);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_free")]
         public static extern void AioFree(ref nng_aio aio);
@@ -471,16 +470,16 @@
         public static extern ref nng_msg AioGetMessage(ref nng_aio aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_input")]
-        public static extern unsafe nng_errno AioSetInput(ref nng_aio aio, uint index, void* arg);
+        public static extern nng_errno AioSetInput(ref nng_aio aio, uint index, IntPtr arg);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_get_input")]
-        public static extern unsafe void* AioGetInput(ref nng_aio aio, uint index);
+        public static extern IntPtr AioGetInput(ref nng_aio aio, uint index);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_output")]
-        public static extern unsafe nng_errno AioSetOutput(ref nng_aio aio, uint index, void* arg);
+        public static extern nng_errno AioSetOutput(ref nng_aio aio, uint index, IntPtr arg);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_get_output")]
-        public static extern unsafe void* AioGetOutput(ref nng_aio aio, uint index);
+        public static extern IntPtr AioGetOutput(ref nng_aio aio, uint index);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_timeout")]
         public static extern void AioSetTimeout(ref nng_aio aio, nng_duration timeout);
@@ -508,22 +507,22 @@
         public static extern nng_errno MessageRealloc(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header")]
-        public static extern unsafe void* MessageHeader(ref nng_msg msg);
+        public static extern IntPtr MessageHeader(ref nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_len")]
         public static extern UIntPtr MessageHeaderLength(in nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_body")]
-        public static extern unsafe void* MessageBody(ref nng_msg msg);
+        public static extern IntPtr MessageBody(ref nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_len")]
         public static extern UIntPtr MessageLength(in nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_append")]
-        public static extern unsafe nng_errno MessageAppend(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern nng_errno MessageAppend(ref nng_msg msg, IntPtr data, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_insert")]
-        public static extern unsafe nng_errno MessageInsert(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern nng_errno MessageInsert(ref nng_msg msg, IntPtr data, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_trim")]
         public static extern nng_errno MessageTrim(ref nng_msg msg, UIntPtr size);
@@ -532,10 +531,10 @@
         public static extern nng_errno MessageChop(ref nng_msg msg, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_append")]
-        public static extern unsafe nng_errno MessageHeaderAppend(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern nng_errno MessageHeaderAppend(ref nng_msg msg, IntPtr data, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_insert")]
-        public static extern unsafe nng_errno MessageHeaderInsert(ref nng_msg msg, void* data, UIntPtr size);
+        public static extern nng_errno MessageHeaderInsert(ref nng_msg msg, IntPtr data, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_trim")]
         public static extern nng_errno MessageHeaderTrim(ref nng_msg msg, UIntPtr size);
@@ -583,14 +582,14 @@
         public static extern nng_pipe MessageGetPipe(ref nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_getopt")]
-        public static extern unsafe nng_errno MessageGetOption(ref nng_msg msg, int opt, void* ptr, ref UIntPtr size);
+        public static extern nng_errno MessageGetOption(ref nng_msg msg, int opt, IntPtr ptr, ref UIntPtr size);
 
 #endregion
 
 #region Pipe API
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt")]
-        public static extern unsafe nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* ptr, out UIntPtr size);
+        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr ptr, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_bool")]
         public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool val);
@@ -611,7 +610,7 @@
         public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_ptr")]
-        public static extern unsafe nng_errno PipeGetOptionPointer(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* val);
+        public static extern nng_errno PipeGetOptionPointer(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_string")]
         public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string val);
