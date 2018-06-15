@@ -18,6 +18,8 @@ namespace IntegrationTests.Tests.BasicReqRep
         /// <inheritdoc />
         public override void Run()
         {
+            Interop.Initialize();
+
             CreateReplySocket();
             CreateRequestSocket();
 
@@ -97,7 +99,7 @@ namespace IntegrationTests.Tests.BasicReqRep
                 return;
             }
 
-            ThrowHelper.Throw(errorCode);
+            throw ThrowHelper.GetExceptionForErrorCode(errorCode);
         }
     }
 }

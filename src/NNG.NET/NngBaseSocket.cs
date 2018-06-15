@@ -65,13 +65,13 @@ namespace NNG
                 throw new NngException("Failed to call socket open function. See inner exception for more details. ", exception);
             }
 
-            if (result == (int) nng_errno.NNG_SUCCESS)
+            if (result == nng_errno.NNG_SUCCESS)
             {
                 Socket = socket;
             }
             else
             {
-                ThrowHelper.Throw(result);
+                throw ThrowHelper.GetExceptionForErrorCode(result);
             }
         }
 
