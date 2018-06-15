@@ -7,7 +7,7 @@ namespace NNGNET.Protocols
 {
     public class PushSocket : NngBaseSocket
     {
-        public PushSocket() : base(Interop.nng_push0_open)
+        public PushSocket() : base(Interop.OpenPush0)
         {
         }
     }

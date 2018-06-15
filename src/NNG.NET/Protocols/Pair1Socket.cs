@@ -6,7 +6,7 @@ namespace NNGNET.Protocols
     {
         internal const string NNG_OPT_PAIR1_POLY = "pair1:polyamorous";
 
-        public Pair1Socket() : base(Interop.nng_pair1_open)
+        public Pair1Socket() : base(Interop.OpenPair1)
         {
         }
     }

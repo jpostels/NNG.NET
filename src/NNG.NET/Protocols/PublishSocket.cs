@@ -8,7 +8,7 @@ namespace NNGNET.Protocols
     public class PublishSocket : NngBaseSocket
     {
         /// <inheritdoc />
-        public PublishSocket() : base(Interop.nng_pub0_open)
+        public PublishSocket() : base(Interop.OpenPub0)
         {
         }
     }

@@ -7,7 +7,7 @@ namespace NNGNET.Protocols
 {
     public class BusSocket : NngBaseSocket
     {
-        public BusSocket() : base(Interop.nng_bus0_open)
+        public BusSocket() : base(Interop.OpenBus0)
         {
         }
     }

@@ -80,7 +80,7 @@ namespace NNGNET
         /// </summary>
         internal nng_errno Close()
         {
-            return Interop.nng_close(Socket);
+            return Interop.Close(Socket);
         }
 
         /// <summary>

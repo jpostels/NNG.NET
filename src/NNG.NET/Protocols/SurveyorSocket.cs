@@ -9,7 +9,7 @@ namespace NNGNET.Protocols
     {
         internal const string NNG_OPT_SURVEYOR_SURVEYTIME = "surveyor:survey-time";
 
-        public SurveyorSocket() : base(Interop.nng_surveyor0_open)
+        public SurveyorSocket() : base(Interop.OpenSurveyor0)
         {
         }
     }

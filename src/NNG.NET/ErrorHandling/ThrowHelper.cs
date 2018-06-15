@@ -17,7 +17,7 @@ namespace NNGNET.ErrorHandling
         /// <returns>
         ///     Returns the error description if there is one; Otherwise an empty string.
         /// </returns>
-        public static string GetNanomsgError(nng_errno errorCode) => Interop.nng_strerror((int)errorCode);
+        public static string GetNanomsgError(nng_errno errorCode) => Interop.GetErrorString((int)errorCode);
 
         /// <summary>
         ///     Throws an exception with the specified <paramref name="errorCode"/>,

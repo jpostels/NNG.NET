@@ -7,7 +7,7 @@ namespace NNGNET.Protocols
 {
     public class Pair0Socket : NngBaseSocket
     {
-        public Pair0Socket() : base(Interop.nng_pair0_open)
+        public Pair0Socket() : base(Interop.OpenPair0)
         {
         }
     }

@@ -11,7 +11,7 @@ namespace NNGNET.Protocols
 
         internal const string NNG_OPT_SUB_UNSUBSCRIBE = "sub:unsubscribe";
 
-        public SubscribeSocket() : base(Interop.nng_sub0_open)
+        public SubscribeSocket() : base(Interop.OpenSub0)
         {
         }
     }

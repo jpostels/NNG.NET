@@ -7,7 +7,7 @@ namespace NNGNET.Protocols
 {
     public class ReplySocket : NngBaseSocket
     {
-        public ReplySocket() : base(Interop.nng_rep0_open)
+        public ReplySocket() : base(Interop.OpenRep0)
         {
         }
     }

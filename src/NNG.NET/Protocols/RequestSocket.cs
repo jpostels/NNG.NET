@@ -9,7 +9,7 @@ namespace NNGNET.Protocols
     {
         internal const string NNG_OPT_REQ_RESENDTIME = "req:resend-time";
 
-        public RequestSocket() : base(Interop.nng_req0_open)
+        public RequestSocket() : base(Interop.OpenReq0)
         {
         }
     }
