@@ -31,14 +31,14 @@ namespace NNGNET
         /// <value>
         ///     The socket.
         /// </value>
-        internal nng_socket Socket { get; set; }
+        internal NNGSocket Socket { get; set; }
 
         /// <summary>
         ///     A socket opener function e.g. <see cref="Interop.nng_req0_open"/>.
         /// </summary>
         /// <param name="socket">The socket.</param>
         /// <returns></returns>
-        internal delegate nng_errno SocketOpenFunction(out nng_socket socket);
+        internal delegate nng_errno SocketOpenFunction(out NNGSocket socket);
 
         /// <summary>
         ///     Opens a socket with the specified <paramref name="openFunction"/>
@@ -52,7 +52,7 @@ namespace NNGNET
         internal void Open(SocketOpenFunction openFunction)
         {
             nng_errno result;
-            nng_socket socket;
+            NNGSocket socket;
             try
             {
                 lock (SocketCreationLock)

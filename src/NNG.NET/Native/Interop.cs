@@ -106,10 +106,10 @@
         ///     <see cref="nng_errno.NNG_ECLOSED"/>: The socket is already closed or was never opened.
         /// </returns>
         [DllImport(LibraryName, EntryPoint = "nng_close")]
-        public static extern nng_errno Close(nng_socket socketId);
+        public static extern nng_errno Close(NNGSocket socketId);
 
         [DllImport(LibraryName, EntryPoint = "nng_socket_id")]
-        public static extern int GetSocketId(nng_socket socketId);
+        public static extern int GetSocketId(NNGSocket socketId);
 
         [DllImport(LibraryName, EntryPoint = "nng_closeall")]
         public static extern void CloseAll();
@@ -117,73 +117,73 @@
 #region nng setopt
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_bool")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_int")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_size")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_ms")]
-        public static extern nng_errno SetOptionDuration(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
+        public static extern nng_errno SetOptionDuration(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_uint64")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, ulong value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_string")]
-        public static extern nng_errno SetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
+        public static extern nng_errno SetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] string value);
 
         [DllImport(LibraryName, EntryPoint = "nng_setopt_ptr")]
-        public static extern nng_errno SetOptionPointer(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr ptr);
+        public static extern nng_errno SetOptionPointer(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr ptr);
 
 #endregion
 
 #region nng getopt
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt")]
-        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, out UIntPtr size);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_bool")]
-        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_int")]
-        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_ms")]
-        public static extern nng_errno GetOptionDuration(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
+        public static extern nng_errno GetOptionDuration(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_size")]
-        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_uint64")]
-        public static extern nng_errno GetOption(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_ptr")]
-        public static extern nng_errno GetOptionPointer(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
+        public static extern nng_errno GetOptionPointer(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_string")]
-        public static extern nng_errno GetOption(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
+        public static extern nng_errno GetOption(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
 
 #endregion
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_notify")]
-        public static extern nng_errno PipeSetNotification(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, IntPtr args);
+        public static extern nng_errno PipeSetNotification(NNGSocket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, IntPtr args);
 
         [DllImport(LibraryName, EntryPoint = "nng_listen")]
-        public static extern nng_errno Listen(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno Listen(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_dial")]
-        public static extern nng_errno Dial(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno Dial(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_dialer listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_create")]
-        public static extern nng_errno DialerCreate([Out, In] ref nng_dialer dialer, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno DialerCreate([Out, In] ref nng_dialer dialer, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName, EntryPoint = "nng_listener_create")]
-        public static extern nng_errno ListenerCreate([Out, In] ref nng_listener listener, nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno ListenerCreate([Out, In] ref nng_listener listener, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_start")]
         public static extern nng_errno DialerStart(nng_dialer dialer, int flags);
@@ -310,27 +310,27 @@
         public static extern string GetErrorString(int errorCode);
 
         [DllImport(LibraryName, EntryPoint = "nng_send")]
-        public static extern nng_errno Send(nng_socket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno Send(NNGSocket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_recv")]
-        public static extern nng_errno Receive(nng_socket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
+        public static extern nng_errno Receive(NNGSocket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_sendmsg")]
-        public static extern nng_errno SendMessage(nng_socket socketId, ref nng_msg message, int flags);
+        public static extern nng_errno SendMessage(NNGSocket socketId, ref nng_msg message, int flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_recvmsg")]
-        public static extern unsafe nng_errno ReceiveMessage(nng_socket socketId, ref nng_msg* message, int flags);
+        public static extern unsafe nng_errno ReceiveMessage(NNGSocket socketId, ref nng_msg* message, int flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_send_aio")]
-        public static extern void SendAio(nng_socket socketId, ref nng_aio aio);
+        public static extern void SendAio(NNGSocket socketId, ref nng_aio aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_recv_aio")]
-        public static extern void ReceiveAio(nng_socket socketId, ref nng_aio aio);
+        public static extern void ReceiveAio(NNGSocket socketId, ref nng_aio aio);
 
 #region Context support
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_open")]
-        public static extern nng_errno ContextOpen([Out, In] ref nng_ctx ctx, nng_socket socket);
+        public static extern nng_errno ContextOpen([Out, In] ref nng_ctx ctx, NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_close")]
         public static extern nng_errno ContextClose(nng_ctx ctx);
@@ -577,7 +577,7 @@
         public static extern int GetPipeId(nng_pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_socket")]
-        public static extern nng_socket GetPipeSocket(nng_pipe pipe);
+        public static extern NNGSocket GetPipeSocket(nng_pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_dialer")]
         public static extern nng_dialer GetPipeDialer(nng_pipe pipe);
@@ -626,7 +626,7 @@
 #endregion
 
         [DllImport(LibraryName, EntryPoint = "nng_device")]
-        public static extern nng_errno Device(nng_socket socket1, nng_socket socket2);
+        public static extern nng_errno Device(NNGSocket socket1, NNGSocket socket2);
 
 #region URL support
 
@@ -651,70 +651,70 @@
 #region protocols
 
         [DllImport(LibraryName, EntryPoint = "nng_req0_open")]
-        public static extern nng_errno OpenReq0(out nng_socket socket);
+        public static extern nng_errno OpenReq0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_req0_open_raw")]
-        public static extern nng_errno OpenReq0Raw(out nng_socket socket);
+        public static extern nng_errno OpenReq0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_rep0_open")]
-        public static extern nng_errno OpenRep0(out nng_socket socket);
+        public static extern nng_errno OpenRep0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_rep0_open_raw")]
-        public static extern nng_errno OpenRep0Raw(out nng_socket socket);
+        public static extern nng_errno OpenRep0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_surveyor0_open")]
-        public static extern nng_errno OpenSurveyor0(out nng_socket socket);
+        public static extern nng_errno OpenSurveyor0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_surveyor0_open_raw")]
-        public static extern nng_errno OpenSurveyor0Raw(out nng_socket socket);
+        public static extern nng_errno OpenSurveyor0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_respondent0_open")]
-        public static extern nng_errno OpenRespondent0(out nng_socket socket);
+        public static extern nng_errno OpenRespondent0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_respondent0_open_raw")]
-        public static extern nng_errno OpenRespondent0Raw(out nng_socket socket);
+        public static extern nng_errno OpenRespondent0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pub0_open")]
-        public static extern nng_errno OpenPub0(out nng_socket socket);
+        public static extern nng_errno OpenPub0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pub0_open_raw")]
-        public static extern nng_errno OpenPub0Raw(out nng_socket socket);
+        public static extern nng_errno OpenPub0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_sub0_open")]
-        public static extern nng_errno OpenSub0(out nng_socket socket);
+        public static extern nng_errno OpenSub0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_sub0_open_raw")]
-        public static extern nng_errno OpenSub0Raw(out nng_socket socket);
+        public static extern nng_errno OpenSub0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_push0_open")]
-        public static extern nng_errno OpenPush0(out nng_socket socket);
+        public static extern nng_errno OpenPush0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_push0_open_raw")]
-        public static extern nng_errno OpenPush0Raw(out nng_socket socket);
+        public static extern nng_errno OpenPush0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pull0_open")]
-        public static extern nng_errno OpenPull0(out nng_socket socket);
+        public static extern nng_errno OpenPull0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pull0_open_raw")]
-        public static extern nng_errno OpenPull0Raw(out nng_socket socket);
+        public static extern nng_errno OpenPull0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pair0_open")]
-        public static extern nng_errno OpenPair0(out nng_socket socket);
+        public static extern nng_errno OpenPair0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pair0_open_raw")]
-        public static extern nng_errno OpenPair0Raw(out nng_socket socket);
+        public static extern nng_errno OpenPair0Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pair1_open")]
-        public static extern nng_errno OpenPair1(out nng_socket socket);
+        public static extern nng_errno OpenPair1(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_pair1_open_raw")]
-        public static extern nng_errno OpenPair1Raw(out nng_socket socket);
+        public static extern nng_errno OpenPair1Raw(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_bus0_open")]
-        public static extern nng_errno OpenBus0(out nng_socket socket);
+        public static extern nng_errno OpenBus0(out NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_bus0_open_raw")]
-        public static extern nng_errno OpenBus0Raw(out nng_socket socket);
+        public static extern nng_errno OpenBus0Raw(out NNGSocket socket);
 
 #endregion
 

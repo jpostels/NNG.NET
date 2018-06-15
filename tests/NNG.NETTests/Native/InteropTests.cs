@@ -74,8 +74,8 @@ namespace NNGNET.NETTests.Native
         {
             Interop.Initialize();
 
-            nng_socket nngSocket;
-            nngSocket.id = 2;
+            NNGSocket nngSocket;
+            nngSocket.Id = 2;
             var res = Interop.Close(nngSocket);
             Print("HRESULT: 0x" + ((int)res).ToString("X8"));
             Print("FLAG: " + res.ToString("G"));
@@ -140,7 +140,7 @@ namespace NNGNET.NETTests.Native
             var error = Interop.OpenReq0(out var socket);
 
             Print("ERROR: 0x" + error.ToString("X"));
-            Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
+            Print("SOCKET_ID: 0x" + socket.Id.ToString("X"));
 
             Assert.Equal(nng_errno.NNG_SUCCESS, error);
         }
@@ -152,7 +152,7 @@ namespace NNGNET.NETTests.Native
             var error = Interop.OpenReq0(out var socket);
 
             Print("ERROR: 0x" + error.ToString("X"));
-            Print("SOCKET_ID: 0x" + socket.id.ToString("X"));
+            Print("SOCKET_ID: 0x" + socket.Id.ToString("X"));
 
             Assert.Equal(nng_errno.NNG_SUCCESS, error);
 
@@ -166,7 +166,7 @@ namespace NNGNET.NETTests.Native
         public void PipeNotifyCall()
         {
             Interop.Initialize();
-            var error = Interop.PipeSetNotification(new nng_socket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (_, __, ___) => { }, IntPtr.Zero);
+            var error = Interop.PipeSetNotification(new NNGSocket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (_, __, ___) => { }, IntPtr.Zero);
 
             Print("ERROR: 0x" + error.ToString("X"));
         }
