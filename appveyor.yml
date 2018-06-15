@@ -22,9 +22,6 @@ configuration:
     - Release
     - Debug
 
-platform:
-    - x64
-
 test:
 # only assemblies to test
   assemblies:
