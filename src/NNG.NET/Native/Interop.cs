@@ -160,7 +160,7 @@
         [DllImport(LibraryName, EntryPoint = "nng_closeall")]
         public static extern void nng_closeall();
 
-        #region nng setopt
+#region nng setopt
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_setopt(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
@@ -186,9 +186,9 @@
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_setopt_ptr(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* ptr);
 
-        #endregion
+#endregion
 
-        #region nng getopt
+#region nng getopt
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_getopt(nng_socket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, out UIntPtr size);
@@ -214,7 +214,7 @@
         [DllImport(LibraryName)]
         public static extern nng_errno nng_getopt_string(nng_socket sockedId, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string value);
 
-        #endregion
+#endregion
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_pipe_notify(nng_socket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, void* args);
@@ -373,7 +373,7 @@
         [DllImport(LibraryName)]
         public static extern void nng_recv_aio(nng_socket socketId, ref nng_aio aio);
 
-        #region Context support
+#region Context support
 
         [DllImport(LibraryName)]
         public static extern nng_errno nng_ctx_open([Out, In] ref nng_ctx ctx, nng_socket socket);
@@ -420,7 +420,7 @@
         [DllImport(LibraryName)]
         public static extern nng_errno nng_ctx_setopt_size(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
-        #endregion
+#endregion
 
         [DllImport(LibraryName)]
         public static extern IntPtr nng_alloc(UIntPtr size);
@@ -435,7 +435,7 @@
         [DllImport(LibraryName)]
         public static extern void nng_strfree([MarshalAs(UnmanagedType.LPStr)] string str);
 
-        #region AIO
+#region AIO
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void AioAllocCallback(void* ptr);
@@ -494,9 +494,9 @@
         [DllImport(LibraryName)]
         public static extern void nng_sleep_aio(nng_duration duration, ref nng_aio aio);
 
-        #endregion AIO
+#endregion AIO
 
-        #region Message API
+#region Message API
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_msg_alloc([Out, In] ref nng_msg* msg, UIntPtr size);
@@ -585,9 +585,9 @@
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_msg_getopt(ref nng_msg msg, int opt, void* ptr, ref UIntPtr size);
 
-        #endregion
+#endregion
 
-        #region Pipe API
+#region Pipe API
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_pipe_getopt(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* ptr, out UIntPtr size);
@@ -631,9 +631,9 @@
         [DllImport(LibraryName)]
         public static extern nng_listener nng_pipe_listener(nng_pipe pipe);
 
-        #endregion
+#endregion
 
-        #region Statistics
+#region Statistics
 
         // Statistics.  These are for informational purposes only, and subject
         // to change without notice.  The API for accessing these is stable,
@@ -669,12 +669,12 @@
         //[DllImport(LibraryName)]
         //public static extern long nng_stat_value(ref nng_stat stat);
 
-        #endregion
+#endregion
 
         [DllImport(LibraryName)]
         public static extern nng_errno nng_device(nng_socket socket1, nng_socket socket2);
 
-        #region URL support
+#region URL support
 
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_url_parse(out nng_url* url, [MarshalAs(UnmanagedType.LPStr)] string str);
@@ -685,7 +685,7 @@
         [DllImport(LibraryName)]
         public static extern unsafe nng_errno nng_url_clone(out nng_url* urlDuplicate, ref nng_url urlSource);
 
-        #endregion
+#endregion
 
         /// <summary>
         ///     Report library version
@@ -694,7 +694,7 @@
         [DllImport(LibraryName, EntryPoint = "nng_version")]
         public static extern IntPtr nng_version();
 
-        #region protocols
+#region protocols
 
         [DllImport(LibraryName)]
         public static extern nng_errno nng_req0_open(out nng_socket socket);
@@ -762,7 +762,7 @@
         [DllImport(LibraryName)]
         public static extern nng_errno nng_bus0_open_raw(out nng_socket socket);
 
-        #endregion
+#endregion
 
         /*#region transports
         
@@ -781,7 +781,7 @@
         [DllImport(LibraryName)]
         public static extern nng_errno nng_wss_register();
         
-        #endregion*/
+#endregion*/
 
 #pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
     }
