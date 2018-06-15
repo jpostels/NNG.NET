@@ -6,7 +6,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup Condition=" ('$(Platform)' == 'x86' OR '$(Platform)' == 'AnyCPU') AND '$(OS)' == 'Windows_NT' ">
+  <ItemGroup Condition=" '$(Platform)' == 'x86' AND '$(OS)' == 'Windows_NT' ">
     <None Include="$(MSBuildThisFileDirectory)\..\runtimes\win-x86\native\nng.dll">
       <Link>nng.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
