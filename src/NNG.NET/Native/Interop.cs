@@ -5,8 +5,6 @@
     using System.Runtime.InteropServices;
 
     using InteropTypes;
-    using Utils.Linux;
-    using Utils.Windows;
 
     using nng_duration = System.Int32;
 
@@ -41,14 +39,8 @@
         /// </summary>
         /// <remarks>
         ///     Prelinks all P/Invoke functions.
-        ///     This makes sure all methods are functioning correctly.
+        ///     This also makes sure all methods are functioning correctly.
         /// </remarks> 
-        /// <exception cref="NotSupportedException">
-        ///     NNG.NET does not support this Operating System.
-        /// </exception>
-        /// <exception cref="NngException">
-        ///     Failed to load posix library. See inner exception for more details.
-        /// </exception>
         public static void Initialize()
         {
             if (IsInitialized)
@@ -63,48 +55,11 @@
                     return;
                 }
 
-                SetLibraryPath();
-
                 // Prelink all P/Invoke functions.
                 // This makes sure all methods are functioning correctly
                 // NOTE: Does not actually invoke a function call
                 Marshal.PrelinkAll(typeof(Interop));
                 IsInitialized = true;
-            }
-        }
-
-        /// <summary>
-        ///     Sets the library path.
-        /// </summary>
-        /// <exception cref="NotSupportedException">
-        ///     NNG.NET does not support this Operating System.
-        /// </exception>
-        /// <exception cref="NngException">
-        ///     Failed to load posix library. See inner exception for more details.
-        /// </exception>
-        private static void SetLibraryPath()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                // Just set the dll directory. The automatic marshalling of the DllImportAtribute will do the rest.
-                Kernel32.SetDllDirectory(WindowsLibraryLoader.GetWindowsLibraryPath());
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                // Loading it once explicitly will avoid implicit loading via the DllImportAttribute,
-                // which would likely use the wrong search path.
-                try
-                {
-                    UnixLibraryLoader.LoadPosixLibrary(LibraryName);
-                }
-                catch (LibraryLoadException libraryLoadException)
-                {
-                    throw new NngException("Failed to load posix library. See inner exception for more details. ", libraryLoadException);
-                }
-            }
-            else
-            {
-                throw new NotSupportedException("NNG.NET does not support this Operating System.");
             }
         }
 
