@@ -372,5 +372,285 @@
         }
 
         #endregion
+
+        #region Get option
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="Span{Byte}"/> pointing to the option value.
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static Span<byte> GetOption(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out var pointer, out var size);
+
+            ThrowHelper.ThrowIfNotSuccess(err);
+            unsafe
+            {
+                return new Span<byte>(pointer.ToPointer(), (int) size.ToUInt32());
+            }
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="bool"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static bool GetOptionBool(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out bool value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="int"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static int GetOptionInt32(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out int value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="TimeSpan"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static TimeSpan GetOptionTimeSpan(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOptionDuration(socket, optionName, out var value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return TimeSpan.FromMilliseconds(value);
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="UIntPtr"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static UIntPtr GetOptionUIntPtr(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out UIntPtr value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="ulong"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static ulong GetOptionUInt64(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out ulong value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     An <see cref="IntPtr"/> pointing to the option value.
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static IntPtr GetOptionPointer(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOptionPointer(socket, optionName, out var value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        /// <summary>
+        ///     Gets an option value identified by <paramref name="option"/> for a specific <paramref name="socket"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The actual options that may be configured in this way vary between socket types.
+        /// </remarks>
+        /// <param name="socket">The socket.</param>
+        /// <param name="option">The option.</param>
+        /// <returns>
+        ///     A <see cref="string"/> containing the current option value. 
+        /// </returns>
+        /// <exception cref="NngException">
+        ///     NNG_ECLOSED	<paramref name="socket"/> does not refer to an open socket.
+        ///     -or-
+        ///     NNG_ENOTSUP The <paramref name="option"/> is not supported.
+        ///     -or-
+        ///     NNG_ENOMEM Insufficient memory exists.
+        ///     -or-
+        ///     NNG_EWRITEONLY The option is write-only. 
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="option"/> is null.
+        /// </exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">
+        ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
+        /// </exception>
+        public static string GetOptionString(NNGSocket socket, SocketOption option)
+        {
+            var optionName = OptionNames.GetNameByEnum(option);
+            var err = Interop.GetOption(socket, optionName, out string value);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return value;
+        }
+
+        #endregion
     }
 }

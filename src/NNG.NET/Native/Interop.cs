@@ -145,7 +145,7 @@
 #region nng getopt
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt")]
-        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, IntPtr value, out UIntPtr size);
+        public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr value, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_getopt_bool")]
         public static extern nng_errno GetOption(NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
