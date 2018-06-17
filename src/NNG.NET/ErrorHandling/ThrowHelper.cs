@@ -27,6 +27,7 @@ namespace NNGNET.ErrorHandling
         /// <exception cref="NngException">
         ///     The specified <paramref name="errorCode"/> was something other than <see cref="nng_errno.NNG_SUCCESS"/>
         /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfNotSuccess(nng_errno errorCode)
         {
             if (errorCode == nng_errno.NNG_SUCCESS)

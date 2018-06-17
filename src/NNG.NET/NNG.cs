@@ -1,4 +1,6 @@
-﻿namespace NNGNET
+﻿using System.Reflection;
+
+namespace NNGNET
 {
     using System;
 
@@ -409,7 +411,7 @@
             ThrowHelper.ThrowIfNotSuccess(err);
             unsafe
             {
-                return new Span<byte>(pointer.ToPointer(), (int) size.ToUInt32());
+                return new Span<byte>(pointer.ToPointer(), (int)size.ToUInt32());
             }
         }
 
@@ -751,6 +753,131 @@
             var err = Interop.Dial(socket, address, out var dialer, flags);
             ThrowHelper.ThrowIfNotSuccess(err);
             return dialer;
+        }
+
+        public static Dialer CreateDialer(NNGSocket socket, string address)
+        {
+            var err = Interop.DialerCreate(out var dialer, socket, address);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return dialer;
+        }
+
+        public static Listener CreateListener(NNGSocket socket, string address)
+        {
+            var err = Interop.ListenerCreate(out var dialer, socket, address);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return dialer;
+        }
+
+        public static Dialer StartDialer(Dialer dialer, bool nonBlocking = false)
+        {
+            var flags = nonBlocking ? NNGFlag.NonBlocking : NNGFlag.None;
+            var err = Interop.DialerStart(dialer, flags);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return dialer;
+        }
+
+        public static Listener StartListenerr(Listener listener, bool nonBlocking = false)
+        {
+            var flags = nonBlocking ? NNGFlag.NonBlocking : NNGFlag.None;
+            var err = Interop.ListenerStart(listener, flags);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return listener;
+        }
+
+        public static Dialer CloseDialer(Dialer dialer)
+        {
+            var err = Interop.DialerClose(dialer);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return dialer;
+        }
+
+        public static Listener CloseListener(Listener listener)
+        {
+            var err = Interop.ListenerClose(listener);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return listener;
+        }
+
+        public static int GetDialerId(Dialer dialer)
+        {
+            return Interop.GetDialerId(dialer);
+        }
+
+        public static int GetListenerId(Listener listener)
+        {
+            return Interop.GetListenerId(listener);
+        }
+
+        // TODO Dialer and Listener option getter/setter functions
+
+        internal static string GetErrorString(nng_errno errorCode)
+        {
+            return Interop.GetErrorString((int)errorCode);
+        }
+
+        public static string GetErrorString(int errorCode)
+        {
+            return Interop.GetErrorString(errorCode);
+        }
+
+        public static bool Send(NNGSocket socket, Span<byte> buffer, bool nonBlocking = false, bool alloc = false)
+        {
+            var flags = nonBlocking ? NNGFlag.NonBlocking : NNGFlag.None;
+            if (alloc)
+            {
+                flags |= NNGFlag.Alloc;
+            }
+
+            nng_errno err;
+            unsafe
+            {
+                fixed (byte* ptr = buffer)
+                {
+                    err = Interop.Send(socket, new IntPtr(ptr), new UIntPtr((uint)buffer.Length), flags);
+                }
+            }
+
+            switch (err)
+            {
+                case nng_errno.NNG_SUCCESS:
+                    return true;
+                case nng_errno.NNG_EAGAIN:
+                    return false;
+                default:
+                    throw ThrowHelper.GetExceptionForErrorCode(err);
+            }
+        }
+
+        public static uint Receive(NNGSocket socket, Span<byte> targetBuffer)
+        {
+            var size = new UIntPtr((uint)targetBuffer.Length);
+
+            nng_errno err;
+            unsafe
+            {
+                fixed (byte* ptr = targetBuffer)
+                {
+                    err = Interop.Receive(socket, new IntPtr(ptr), ref size, NNGFlag.None);
+                }
+            }
+
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return size.ToUInt32();
+        }
+
+        public static unsafe Span<byte> Receive(NNGSocket socket)
+        {
+            void* pointer;
+            var x = &pointer;
+
+            var ptr = new IntPtr(x);
+            var size = new UIntPtr();
+
+            var err = Interop.Receive(socket, ptr, ref size, NNGFlag.Alloc);
+            ThrowHelper.ThrowIfNotSuccess(err);
+
+            return new Span<byte>(pointer, (int)size.ToUInt32());
         }
     }
 }

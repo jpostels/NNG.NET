@@ -180,16 +180,16 @@
         public static extern nng_errno Dial(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out Dialer listener, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_create")]
-        public static extern nng_errno DialerCreate([Out, In] ref Dialer dialer, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno DialerCreate(out Dialer dialer, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName, EntryPoint = "nng_listener_create")]
-        public static extern nng_errno ListenerCreate([Out, In] ref Listener listener, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
+        public static extern nng_errno ListenerCreate(out Listener listener, NNGSocket socketId, [MarshalAs(UnmanagedType.LPStr)] string addr);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_start")]
-        public static extern nng_errno DialerStart(Dialer dialer, int flags);
+        public static extern nng_errno DialerStart(Dialer dialer, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_listener_start")]
-        public static extern nng_errno ListenerStart(Listener listener, int flags);
+        public static extern nng_errno ListenerStart(Listener listener, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_close")]
         public static extern nng_errno DialerClose(Dialer dialer);
@@ -198,7 +198,7 @@
         public static extern nng_errno ListenerClose(Listener listener);
 
         [DllImport(LibraryName, EntryPoint = "nng_dialer_id")]
-        public static extern int GetDialerId(Dialer listener);
+        public static extern int GetDialerId(Dialer dialer);
 
         [DllImport(LibraryName, EntryPoint = "nng_listener_id")]
         public static extern int GetListenerId(Listener listener);
@@ -313,7 +313,7 @@
         public static extern nng_errno Send(NNGSocket socketId, IntPtr ptr, UIntPtr size, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_recv")]
-        public static extern nng_errno Receive(NNGSocket socketId, [Out, In] ref IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
+        public static extern nng_errno Receive(NNGSocket socketId, IntPtr ptr, [Out, In] ref UIntPtr size, [MarshalAs(UnmanagedType.I4)] NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_sendmsg")]
         public static extern nng_errno SendMessage(NNGSocket socketId, ref nng_msg message, int flags);

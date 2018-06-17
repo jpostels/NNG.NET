@@ -1,8 +1,11 @@
-﻿namespace NNGNET.Native.InteropTypes
+﻿using System;
+
+namespace NNGNET.Native.InteropTypes
 {
     /// <summary>
     ///     Provides flags for various interop calls.
     /// </summary>
+    [Flags]
     internal enum NNGFlag
     {
         /// <summary>
