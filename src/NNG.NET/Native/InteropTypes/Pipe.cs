@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 namespace NNGNET.Native.InteropTypes
 {
     /// <summary>
-    ///     An NNGPipe is a handle to a “pipe”, which can be thought of as a single connection. 
+    ///     An NNGPipe is a handle to a "pipe", which can be thought of as a single connection. 
     ///     (In most cases this is actually the case — the pipe is an abstraction for a single TCP or IPC connection.) 
     ///     Pipes are associated with either the listener or dialer that created them, 
     ///     and therefore are also automatically associated with a single socket. 
-    ///     Pipe objects are created by dialers (<see cref="nng_dialer"/> objects) and listeners (<see cref="nng_listener"/> objects), 
-    ///     which can be thought of as “owning” the pipe. 
+    ///     Pipe objects are created by dialers (<see cref="nng_dialer"/> objects) and listeners (<see cref="Listener"/> objects), 
+    ///     which can be thought of as "owning" the pipe. 
     ///     Pipe objects may be destroyed by the <see cref="Interop.PipeClose"/> function. 
-    ///     They are also closed when their “owning” dialer or listener is closed, 
+    ///     They are also closed when their "owning" dialer or listener is closed, 
     ///     or when the remote peer closes the underlying connection. 
     /// </summary>
     /// <remarks>

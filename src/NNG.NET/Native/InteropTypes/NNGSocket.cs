@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace NNGNET.Native.InteropTypes
@@ -15,7 +14,6 @@ namespace NNGNET.Native.InteropTypes
     /// <remarks>
     ///     Original name: nng_socket
     /// </remarks>
-    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
     public struct NNGSocket : IEquatable<NNGSocket>
     {

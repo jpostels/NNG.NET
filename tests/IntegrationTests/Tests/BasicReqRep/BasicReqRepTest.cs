@@ -44,18 +44,18 @@ namespace IntegrationTests.Tests.BasicReqRep
         {
             using (var rep = new ReplySocket())
             {
-                var res = Interop.Listen(rep.Socket, PipeName, out var listener, nng_flag.NONE);
+                var res = Interop.Listen(rep.Socket, PipeName, out var listener, NNGFlag.None);
                 AssertResult(res);
 
                 var buf = IntPtr.Zero;
                 var size = UIntPtr.Zero;
-                res = Interop.Receive(rep.Socket, ref buf, ref size, nng_flag.NNG_FLAG_ALLOC);
+                res = Interop.Receive(rep.Socket, ref buf, ref size, NNGFlag.Alloc);
                 AssertResult(res);
 
                 Console.WriteLine("received: " + ((byte*)buf.ToPointer())[0].ToString());
                 ((byte*)buf.ToPointer())[0]++;
 
-                res = Interop.Send(rep.Socket, buf, size, nng_flag.NNG_FLAG_ALLOC);
+                res = Interop.Send(rep.Socket, buf, size, NNGFlag.Alloc);
                 AssertResult(res);
                 ReplyIsDone = true;
             }
@@ -72,7 +72,7 @@ namespace IntegrationTests.Tests.BasicReqRep
         {
             using (var req = new RequestSocket())
             {
-                var res = Interop.Dial(req.Socket, PipeName, out var dialer, nng_flag.NONE);
+                var res = Interop.Dial(req.Socket, PipeName, out var dialer, NNGFlag.None);
                 AssertResult(res);
 
                 var ptr = Marshal.AllocHGlobal(1);
@@ -80,12 +80,12 @@ namespace IntegrationTests.Tests.BasicReqRep
 
                 Console.WriteLine("sending: " + ((byte*)ptr.ToPointer())[0].ToString());
 
-                res = Interop.Send(req.Socket, ptr, size, nng_flag.NONE);
+                res = Interop.Send(req.Socket, ptr, size, NNGFlag.None);
                 AssertResult(res);
 
                 Marshal.FreeHGlobal(ptr);
 
-                res = Interop.Receive(req.Socket, ref ptr, ref size, nng_flag.NNG_FLAG_ALLOC);
+                res = Interop.Receive(req.Socket, ref ptr, ref size, NNGFlag.Alloc);
                 AssertResult(res);
 
                 Console.WriteLine("received: " + ((byte*)ptr.ToPointer())[0].ToString());
