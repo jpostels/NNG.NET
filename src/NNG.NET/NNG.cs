@@ -652,5 +652,26 @@
         }
 
         #endregion
+
+        /// <summary>
+        ///     Registers the <paramref name="callback"/> action to be called
+        ///     whenever a pipe fires the event specified by <paramref name="pipeEvent"/>
+        ///     on the specified <paramref name="socket"/>.
+        ///     Optionally user data may be supplied in <paramref name="args"/>,
+        ///     which is then provided to the callback.
+        /// </summary>
+        /// <param name="socket">The socket.</param>
+        /// <param name="pipeEvent">The pipe event.</param>
+        /// <param name="callback">The callback action.</param>
+        /// <param name="args">Optional user data</param>
+        /// <exception cref="NngException">
+        ///     The specified errorCode was something other than <see cref="nng_errno.NNG_SUCCESS"/>. <br/>
+        ///     NNG_ECLOSED The <paramref name="socket"/> does not refer to an open socket.
+        /// </exception>
+        public static void SetPipeNotification(NNGSocket socket, PipeEvent pipeEvent, PipeCallback callback, IntPtr args = default)
+        {
+            var err = Interop.PipeSetNotification(socket, pipeEvent, callback, args != default ? args : IntPtr.Zero);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
     }
 }

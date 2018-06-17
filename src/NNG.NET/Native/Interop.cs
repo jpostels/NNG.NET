@@ -171,7 +171,7 @@
 #endregion
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_notify")]
-        public static extern nng_errno PipeSetNotification(NNGSocket socketId, [MarshalAs(UnmanagedType.I4)] nng_pipe_ev ev, [MarshalAs(UnmanagedType.FunctionPtr)] nng_pipe_cb callback, IntPtr args);
+        public static extern nng_errno PipeSetNotification(NNGSocket socketId, [MarshalAs(UnmanagedType.I4)] PipeEvent pipeEvent, [MarshalAs(UnmanagedType.FunctionPtr)] PipeCallback callback, IntPtr args);
 
         [DllImport(LibraryName, EntryPoint = "nng_listen")]
         public static extern nng_errno Listen(NNGSocket sockedId, [MarshalAs(UnmanagedType.LPStr)] string addr, out nng_listener listener, [MarshalAs(UnmanagedType.I4)] nng_flag flags);
@@ -531,10 +531,10 @@
         public static extern void MessageHeaderClear(ref nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_set_pipe")]
-        public static extern void MessageSetPipe(ref nng_msg msg, nng_pipe pipe);
+        public static extern void MessageSetPipe(ref nng_msg msg, Pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_get_pipe")]
-        public static extern nng_pipe MessageGetPipe(ref nng_msg msg);
+        public static extern Pipe MessageGetPipe(ref nng_msg msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_getopt")]
         public static extern nng_errno MessageGetOption(ref nng_msg msg, int opt, IntPtr ptr, ref UIntPtr size);
@@ -544,46 +544,46 @@
 #region Pipe API
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr ptr, out UIntPtr size);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr ptr, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_bool")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_int")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_ms")]
-        public static extern nng_errno PipeGetOptionDuration(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
+        public static extern nng_errno PipeGetOptionDuration(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_size")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out UIntPtr val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_sockaddr")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_sockaddr val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_uint64")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out ulong val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_ptr")]
-        public static extern nng_errno PipeGetOptionPointer(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr val);
+        public static extern nng_errno PipeGetOptionPointer(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, out IntPtr val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_getopt_string")]
-        public static extern nng_errno PipeGetOption(nng_pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string val);
+        public static extern nng_errno PipeGetOption(Pipe pipe, [MarshalAs(UnmanagedType.LPStr)] string optionName, [MarshalAs(UnmanagedType.LPStr)] out string val);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_close")]
-        public static extern nng_errno PipeClose(nng_pipe pipe);
+        public static extern nng_errno PipeClose(Pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_id")]
-        public static extern int GetPipeId(nng_pipe pipe);
+        public static extern int GetPipeId(Pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_socket")]
-        public static extern NNGSocket GetPipeSocket(nng_pipe pipe);
+        public static extern NNGSocket GetPipeSocket(Pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_dialer")]
-        public static extern nng_dialer GetPipeDialer(nng_pipe pipe);
+        public static extern nng_dialer GetPipeDialer(Pipe pipe);
 
         [DllImport(LibraryName, EntryPoint = "nng_pipe_listener")]
-        public static extern nng_listener GetPipeListener(nng_pipe pipe);
+        public static extern nng_listener GetPipeListener(Pipe pipe);
 
 #endregion
 

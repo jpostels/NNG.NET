@@ -166,7 +166,7 @@ namespace NNGNET.NETTests.Native
         public void PipeNotifyCall()
         {
             Interop.Initialize();
-            var error = Interop.PipeSetNotification(new NNGSocket(), nng_pipe_ev.NNG_PIPE_EV_ADD_POST, (_, __, ___) => { }, IntPtr.Zero);
+            var error = Interop.PipeSetNotification(new NNGSocket(), PipeEvent.Added, (_, __, ___) => { }, IntPtr.Zero);
 
             Print("ERROR: 0x" + error.ToString("X"));
         }
