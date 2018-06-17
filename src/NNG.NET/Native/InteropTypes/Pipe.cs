@@ -9,7 +9,7 @@ namespace NNGNET.Native.InteropTypes
     ///     (In most cases this is actually the case — the pipe is an abstraction for a single TCP or IPC connection.) 
     ///     Pipes are associated with either the listener or dialer that created them, 
     ///     and therefore are also automatically associated with a single socket. 
-    ///     Pipe objects are created by dialers (<see cref="nng_dialer"/> objects) and listeners (<see cref="Listener"/> objects), 
+    ///     Pipe objects are created by dialers (<see cref="Dialer"/> objects) and listeners (<see cref="Listener"/> objects), 
     ///     which can be thought of as "owning" the pipe. 
     ///     Pipe objects may be destroyed by the <see cref="Interop.PipeClose"/> function. 
     ///     They are also closed when their "owning" dialer or listener is closed, 
