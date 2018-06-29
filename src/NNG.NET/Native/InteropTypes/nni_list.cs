@@ -1,12 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
-    public struct nni_list
+    internal struct nni_list
     {
-        // TODO
+        internal nni_list_node ll_head;
+
+        internal UIntPtr ll_offset;
     }
 }
