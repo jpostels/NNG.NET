@@ -53,6 +53,36 @@ namespace NNGNETTests
         }
 
         [Fact]
+        public unsafe void AioAlloc_ShouldReturnValidValue()
+        {
+            void Cb(void* ptr) => Print("CB called: " + new IntPtr(ptr));
+            var aio = NNG.AllocAio(Cb, IntPtr.Zero);
+            Assert.NotEqual(new NNGAIO(), aio);
+
+            var count = NNG.GetAioCount(aio);
+            Print(count.ToUInt64().ToString());
+        }
+
+        [Fact]
+        public unsafe void AioSetMessage_ShouldSetMessage()
+        {
+            void Cb(void* ptr) => Print("CB called: " + new IntPtr(ptr));
+            var aio = NNG.AllocAio(Cb, IntPtr.Zero);
+            Assert.NotEqual(new NNGAIO(), aio);
+
+            const uint MessageLength = 100;
+
+            var msg = NNG.AllocMessage(MessageLength);
+            NNG.SetAioMessage(aio, msg);
+
+            var rmsg = NNG.GetAioMessage(aio);
+            var len = NNG.GetMessageLength(rmsg);
+
+            Print("Length: " + len.ToString());
+            Assert.Equal(MessageLength, len);
+        }
+
+        [Fact]
         public void OpenReq0_ShouldReturnValidSocket() => TestSocketOpenFunction(NNG.OpenReq0);
 
         [Fact]

@@ -119,10 +119,10 @@ namespace NNGNET.Native.InteropTypes
             Handle = aio;
         }
 
-        internal ref nng_aio AsRef()
-        {
-            return ref Unsafe.AsRef<nng_aio>(Handle);
-        }
+        //internal ref nng_aio AsRef()
+        //{
+        //    return ref Unsafe.AsRef<nng_aio>(Handle);
+        //}
 
         internal AioCancelFunction CancelFunction => Marshal.GetDelegateForFunctionPointer<AioCancelFunction>(Handle[0].a_prov_cancel);
 

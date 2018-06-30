@@ -331,10 +331,10 @@ namespace NNGNET.Native
         public static extern nng_errno ReceiveMessage(NNGSocket socketId, ref nng_msg* message, NNGFlag flags);
 
         [DllImport(LibraryName, EntryPoint = "nng_send_aio")]
-        public static extern void SendAio(NNGSocket socketId, ref nng_aio aio);
+        public static extern void SendAio(NNGSocket socketId, nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_recv_aio")]
-        public static extern void ReceiveAio(NNGSocket socketId, ref nng_aio aio);
+        public static extern void ReceiveAio(NNGSocket socketId, nng_aio* aio);
 
 #region Context support
 
@@ -404,58 +404,58 @@ namespace NNGNET.Native
         #region AIO
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_alloc")]
-        public static extern nng_errno AioAlloc(out nng_aio aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioCompletionCallback completionCallback, void* args);
+        public static extern nng_errno AioAlloc(out nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioCompletionCallback completionCallback, void* args);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_free")]
-        public static extern void AioFree(ref nng_aio aio);
+        public static extern void AioFree(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_stop")]
-        public static extern void AioStop(ref nng_aio aio);
+        public static extern void AioStop(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_result")]
-        public static extern nng_errno AioResult(ref nng_aio aio);
+        public static extern nng_errno AioResult(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_count")]
-        public static extern UIntPtr AioCount(ref nng_aio aio);
+        public static extern UIntPtr AioCount(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_cancel")]
-        public static extern void AioCancel(ref nng_aio aio);
+        public static extern void AioCancel(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_abort")]
-        public static extern void AioAbort(ref nng_aio aio, int err);
+        public static extern void AioAbort(nng_aio* aio, int err);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_wait")]
-        public static extern void AioWait(ref nng_aio aio);
+        public static extern void AioWait(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_msg")]
-        public static extern void AioSetMessage(ref nng_aio aio, nng_msg* msg);
+        public static extern void AioSetMessage(nng_aio* aio, nng_msg* msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_get_msg")]
-        public static extern nng_msg* AioGetMessage(ref nng_aio aio);
+        public static extern nng_msg* AioGetMessage(nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_input")]
-        public static extern nng_errno AioSetInput(ref nng_aio aio, uint index, void* arg);
+        public static extern nng_errno AioSetInput(nng_aio* aio, uint index, void* arg);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_get_input")]
-        public static extern void* AioGetInput(ref nng_aio aio, uint index);
+        public static extern void* AioGetInput(nng_aio* aio, uint index);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_output")]
-        public static extern nng_errno AioSetOutput(ref nng_aio aio, uint index, void* arg);
+        public static extern nng_errno AioSetOutput(nng_aio* aio, uint index, void* arg);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_get_output")]
-        public static extern void* AioGetOutput(ref nng_aio aio, uint index);
+        public static extern void* AioGetOutput(nng_aio* aio, uint index);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_timeout")]
-        public static extern void AioSetTimeout(ref nng_aio aio, nng_duration timeout);
+        public static extern void AioSetTimeout(nng_aio* aio, nng_duration timeout);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_iov")]
-        public static extern nng_errno AioSetIoVector(ref nng_aio aio, uint niov, nng_iov* iov);
+        public static extern nng_errno AioSetIoVector(nng_aio* aio, uint niov, nng_iov* iov);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_finish")]
-        public static extern void AioFinish(ref nng_aio aio, int rv);
+        public static extern void AioFinish(nng_aio* aio, int rv);
 
         [DllImport(LibraryName, EntryPoint = "nng_sleep_aio")]
-        public static extern void AioSleep(nng_duration duration, ref nng_aio aio);
+        public static extern void AioSleep(nng_duration duration, nng_aio* aio);
 
 #endregion AIO
 

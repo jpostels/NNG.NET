@@ -967,9 +967,9 @@
             }
         }
 
-        public static unsafe void SendAio(NNGSocket socketId, NNGAIO aio) => Interop.SendAio(socketId, ref aio.AsRef());
+        public static unsafe void SendAio(NNGSocket socketId, NNGAIO aio) => Interop.SendAio(socketId, aio.Handle);
 
-        public static unsafe void ReceiveAio(NNGSocket socketId, NNGAIO aio) => Interop.ReceiveAio(socketId, ref aio.AsRef());
+        public static unsafe void ReceiveAio(NNGSocket socketId, NNGAIO aio) => Interop.ReceiveAio(socketId, aio.Handle);
 
         // TODO Context support
 
@@ -1001,66 +1001,66 @@
         {
             var err = Interop.AioAlloc(out var ptr, completionCallback, args.ToPointer());
             ThrowHelper.ThrowIfNotSuccess(err);
-            return new NNGAIO(&ptr);
+            return new NNGAIO(ptr);
         }
 
-        public static unsafe void FreeAio(NNGAIO aio) => Interop.AioFree(ref aio.AsRef());
+        public static unsafe void FreeAio(NNGAIO aio) => Interop.AioFree(aio.Handle);
 
-        public static unsafe void StopAio(NNGAIO aio) => Interop.AioStop(ref aio.AsRef());
+        public static unsafe void StopAio(NNGAIO aio) => Interop.AioStop(aio.Handle);
 
-        public static unsafe int GetAioResult(NNGAIO aio) => (int)Interop.AioResult(ref aio.AsRef());
+        public static unsafe int GetAioResult(NNGAIO aio) => (int)Interop.AioResult(aio.Handle);
 
-        public static unsafe UIntPtr GetAioCount(NNGAIO aio) => Interop.AioCount(ref aio.AsRef());
+        public static unsafe UIntPtr GetAioCount(NNGAIO aio) => Interop.AioCount(aio.Handle);
 
-        public static unsafe void CancelAio(NNGAIO aio) => Interop.AioCancel(ref aio.AsRef());
+        public static unsafe void CancelAio(NNGAIO aio) => Interop.AioCancel(aio.Handle);
 
-        public static unsafe void AbortAio(NNGAIO aio, int err) => Interop.AioAbort(ref aio.AsRef(), err);
+        public static unsafe void AbortAio(NNGAIO aio, int err) => Interop.AioAbort(aio.Handle, err);
 
-        public static unsafe void WaitAio(NNGAIO aio) => Interop.AioWait(ref aio.AsRef());
+        public static unsafe void WaitAio(NNGAIO aio) => Interop.AioWait(aio.Handle);
 
-        public static unsafe void SetAioMessage(NNGAIO aio, NNGMessage message) => Interop.AioSetMessage(ref aio.AsRef(), message.MessageHandle);
+        public static unsafe void SetAioMessage(NNGAIO aio, NNGMessage message) => Interop.AioSetMessage(aio.Handle, message.MessageHandle);
 
-        public static unsafe NNGMessage GetAioMessage(NNGAIO aio) => new NNGMessage(Interop.AioGetMessage(ref aio.AsRef()));
+        public static unsafe NNGMessage GetAioMessage(NNGAIO aio) => new NNGMessage(Interop.AioGetMessage(aio.Handle));
 
         public static unsafe void SetAioInput(NNGAIO aio, uint index, IntPtr arg)
         {
-            var err = Interop.AioSetInput(ref aio.AsRef(), index, arg.ToPointer());
+            var err = Interop.AioSetInput(aio.Handle, index, arg.ToPointer());
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
         public static unsafe IntPtr GetAioInput(NNGAIO aio, uint index)
         {
-            var ptr = Interop.AioGetInput(ref aio.AsRef(), index);
+            var ptr = Interop.AioGetInput(aio.Handle, index);
             return new IntPtr(ptr);
         }
 
         public static unsafe void SetAioOutput(NNGAIO aio, uint index, IntPtr arg)
         {
-            var err = Interop.AioSetOutput(ref aio.AsRef(), index, arg.ToPointer());
+            var err = Interop.AioSetOutput(aio.Handle, index, arg.ToPointer());
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
         public static unsafe IntPtr GetAioOutput(NNGAIO aio, uint index)
         {
-            var ptr = Interop.AioGetOutput(ref aio.AsRef(), index);
+            var ptr = Interop.AioGetOutput(aio.Handle, index);
             return new IntPtr(ptr);
         }
 
         public static void SetAioTimeout(NNGAIO aio, TimeSpan timeout) => SetAioTimeout(aio, (int)timeout.TotalMilliseconds);
 
-        public static unsafe void SetAioTimeout(NNGAIO aio, int timeoutMilliseconds) => Interop.AioSetTimeout(ref aio.AsRef(), timeoutMilliseconds);
+        public static unsafe void SetAioTimeout(NNGAIO aio, int timeoutMilliseconds) => Interop.AioSetTimeout(aio.Handle, timeoutMilliseconds);
 
         public static unsafe void SetAioIoVector(NNGAIO aio, uint numberOfIov, nng_iov* iov)
         {
-            var err = Interop.AioSetIoVector(ref aio.AsRef(), numberOfIov, iov);
+            var err = Interop.AioSetIoVector(aio.Handle, numberOfIov, iov);
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
-        public static unsafe void FinishAio(NNGAIO aio, int err) => Interop.AioFinish(ref aio.AsRef(), err);
+        public static unsafe void FinishAio(NNGAIO aio, int err) => Interop.AioFinish(aio.Handle, err);
 
         public static void SleepAio(NNGAIO aio, TimeSpan timeout) => SleepAio(aio, (int)timeout.TotalMilliseconds);
 
-        public static unsafe void SleepAio(NNGAIO aio, int timeoutMilliseconds) => Interop.AioSleep(timeoutMilliseconds, ref aio.AsRef());
+        public static unsafe void SleepAio(NNGAIO aio, int timeoutMilliseconds) => Interop.AioSleep(timeoutMilliseconds, aio.Handle);
 
         #endregion
 
