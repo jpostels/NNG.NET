@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -8,6 +7,9 @@ using NNGNET.Native;
 using NNGNET.Native.InteropTypes;
 using Xunit;
 using Xunit.Abstractions;
+
+// ReSharper disable ExceptionNotDocumentedOptional
+// ReSharper disable ExceptionNotDocumented
 
 namespace NNGNET.NETTests.Native
 {
@@ -24,6 +26,27 @@ namespace NNGNET.NETTests.Native
 
             Print("AFTER => Initialized: " + Interop.IsInitialized.ToString());
             Assert.True(Interop.IsInitialized, "Interop.IsInitialized");
+        }
+
+        [Fact]
+        public void MarshalPrelinkTest()
+        {
+            foreach (var method in typeof(Interop).GetMethods(BindingFlags.Public | BindingFlags.Static))
+            {
+                Print("Prelinking " + method.Name + "... ");
+                try
+                {
+                    Marshal.Prelink(method);
+                }
+                // ReSharper disable once UncatchableException
+                catch (MarshalDirectiveException)
+                {
+                    Print(method.Name + " failed to prelink! ");
+                    throw;
+                }
+
+                Print("Prelink succesful! ");
+            }
         }
 
         [Fact]
