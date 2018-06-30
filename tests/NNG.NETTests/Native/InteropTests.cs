@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NNGNET.Native;
 using NNGNET.Native.InteropTypes;
@@ -26,10 +27,10 @@ namespace NNGNET.NETTests.Native
         }
 
         [Fact]
-        public void VersionTest01()
+        public unsafe void VersionTest01()
         {
             Interop.Initialize();
-            var nngVersionPtr = Interop.Version();
+            var nngVersionPtr = new IntPtr(Interop.GetVersionUnsafe());
 
             Assert.NotEqual(IntPtr.Zero, nngVersionPtr);
 
@@ -42,7 +43,7 @@ namespace NNGNET.NETTests.Native
         }
 
         [Fact]
-        public void VersionTest02()
+        public unsafe void VersionTest02()
         {
             const int majorVersion = 1;
             const int minorVersion = 0;
@@ -50,7 +51,7 @@ namespace NNGNET.NETTests.Native
 
             Interop.Initialize();
 
-            var nngVersionPtr = Interop.Version();
+            var nngVersionPtr = new IntPtr(Interop.GetVersionUnsafe());
             var nngVersionStr = Marshal.PtrToStringAnsi(nngVersionPtr);
 
             Print("Version: " + nngVersionStr);
@@ -92,45 +93,42 @@ namespace NNGNET.NETTests.Native
         }
 
         [Fact]
-        public void AllocTest01()
+        public unsafe void AllocTest01()
         {
             const int bufSize = 512;
             Interop.Initialize();
             var nngAlloc = Interop.Alloc(new UIntPtr(bufSize));
-            Assert.NotEqual(IntPtr.Zero, nngAlloc);
+            Assert.NotEqual(IntPtr.Zero, new IntPtr(nngAlloc));
 
-            unsafe
+            var pointer = nngAlloc;
+
+            for (var i = 0; i < bufSize; i++)
             {
-                var pointer = nngAlloc.ToPointer();
+                *((byte*)pointer + i) = (byte)i;
+            }
 
-                for (var i = 0; i < bufSize; i++)
-                {
-                    *((byte*)pointer + i) = (byte)i;
-                }
+            for (var i = 0; i < bufSize; i++)
+            {
+                var bytePointer = (byte*)pointer;
 
-                for (var i = 0; i < bufSize; i++)
-                {
-                    var bytePointer = (byte*)pointer;
-
-                    Print(i.ToString("D3") + ": " + bytePointer[i].ToString("D3"));
-                    bytePointer[i].Should().Be((byte)(i % 256));
-                }
+                Print(i.ToString("D3") + ": " + bytePointer[i].ToString("D3"));
+                bytePointer[i].Should().Be((byte)(i % 256));
             }
 
             Interop.Free(nngAlloc, new UIntPtr(bufSize));
         }
 
         [Fact]
-        public void AllocAndFreeTest01()
+        public unsafe void AllocAndFreeTest01()
         {
             const int bufSize = 512;
             Interop.Initialize();
-            var nngAlloc = Interop.Alloc(new UIntPtr(bufSize));
+            var nngAlloc = new IntPtr(Interop.Alloc(new UIntPtr(bufSize)));
             Assert.NotEqual(IntPtr.Zero, nngAlloc);
 
             Print("Ptr: " + nngAlloc.ToString("X"));
 
-            Interop.Free(nngAlloc, new UIntPtr(bufSize));
+            Interop.Free(nngAlloc.ToPointer(), new UIntPtr(bufSize));
         }
 
         [Fact]
@@ -163,12 +161,112 @@ namespace NNGNET.NETTests.Native
         }
 
         [Fact]
-        public void PipeNotifyCall()
+        public unsafe void PipeNotifyCall()
         {
             Interop.Initialize();
-            var error = Interop.PipeSetNotification(new NNGSocket(), PipeEvent.Added, (_, __, ___) => { }, IntPtr.Zero);
+            var error = Interop.PipeSetNotification(new NNGSocket(), PipeEvent.Added, (_, __, ___) => { }, IntPtr.Zero.ToPointer());
 
             Print("ERROR: 0x" + error.ToString("X"));
+        }
+
+        [Fact]
+        public void DialerTest()
+        {
+            Interop.Initialize();
+
+            var res = Interop.OpenRep0(out var socket);
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+            res = Interop.DialerCreate(out var dialer, socket, "ipc://test");
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            res = Interop.DialerStart(dialer, NNGFlag.None);
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            Print("DIALER ID: " + dialer.Id.ToString("X"));
+
+            res = Interop.DialerClose(dialer);
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+        }
+
+        [Fact]
+        public unsafe void MessageTest()
+        {
+            const int size = 10;
+            nng_msg* ptr = default;
+            var res = Interop.MessageAlloc(ref ptr, new UIntPtr(size));
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            var len = Interop.MessageLength(ptr);
+            Print("Length: " + len.ToUInt32());
+
+            res = Interop.MessageAppend(ptr, 0xAABBCCDDU);
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            len = Interop.MessageLength(ptr);
+            Print("Length: " + len.ToUInt32());
+
+            res = Interop.MessageInsert(ptr, 0x11223344);
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            len = Interop.MessageLength(ptr);
+            Print("Length: " + len.ToUInt32());
+
+            var msgPtr = Interop.MessageBody(ptr);
+
+            var sp = new Span<byte>(msgPtr, (int) len);
+
+            Assert.Equal(0x11, sp[0]);
+            Assert.Equal(0x22, sp[1]);
+            Assert.Equal(0x33, sp[2]);
+            Assert.Equal(0x44, sp[3]);
+
+            Assert.Equal(0xAA, sp[14]);
+            Assert.Equal(0xBB, sp[15]);
+            Assert.Equal(0xCC, sp[16]);
+            Assert.Equal(0xDD, sp[17]);
+
+            for (var i = 0; i < sp.Length; i++)
+            {
+                Print("{0}: {1:X2}", i, sp[i]);
+            }
+
+            Interop.MessageFree(ptr);
+        }
+
+        [Fact]
+        public unsafe void MessageSendTest()
+        {
+            const int size = 10;
+            nng_msg* ptr = default;
+            var res = Interop.MessageAlloc(ref ptr, new UIntPtr(size));
+            Assert.Equal(nng_errno.NNG_SUCCESS, res);
+
+            var len = Interop.MessageLength(ptr);
+            Print("Length: " + len.ToUInt32());
+            Assert.Equal(size, (int) len);
+
+            const string pipe = "inproc://" + nameof(MessageSendTest);
+
+            Interop.OpenPush0(out var pushSocket);
+            Interop.OpenPull0(out var pullSocket);
+
+            var t1 = Task.Run(() => Interop.Listen(pullSocket, pipe, out _, NNGFlag.None));
+            var t2 = Task.Run(() => Interop.Dial(pushSocket, pipe, out _, NNGFlag.None));
+
+            Task.WaitAll(t1, t2);
+
+            var t3 = Task.Run(() => Interop.SendMessage(pushSocket, ptr, NNGFlag.None));
+
+            nng_msg* rPtr = default;
+            var t4 = Task.Run(() => Interop.ReceiveMessage(pushSocket, ref rPtr, NNGFlag.None));
+
+            Task.WaitAll(t3, t4);
+
+            var rlen = Interop.MessageLength(ptr);
+            Print("Length: " + rlen.ToUInt32());
+            Assert.Equal(size, (int)rlen);
+
+            Interop.CloseAll();
         }
     }
 }

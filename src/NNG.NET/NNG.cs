@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Buffers;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace NNGNET
 {
@@ -135,10 +139,10 @@ namespace NNGNET
         ///     -or-
         ///     NNG_ESTATE The <paramref name="socket"/> is in an inappropriate state for setting this option. 
         /// </exception>
-        public static void SetOption(NNGSocket socket, SocketOption option, IntPtr pointer, uint size)
+        public static unsafe void SetOption(NNGSocket socket, SocketOption option, IntPtr pointer, uint size)
         {
             var optionName = OptionNames.GetNameByEnum(option);
-            var err = Interop.SetOption(socket, optionName, pointer, new UIntPtr(size));
+            var err = Interop.SetOption(socket, optionName, pointer.ToPointer(), new UIntPtr(size));
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
@@ -366,10 +370,10 @@ namespace NNGNET
         /// <exception cref="System.Collections.Generic.KeyNotFoundException">
         ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
         /// </exception>
-        public static void SetOptionPointer(NNGSocket socket, SocketOption option, IntPtr pointer)
+        public static unsafe void SetOptionPointer(NNGSocket socket, SocketOption option, IntPtr pointer)
         {
             var optionName = OptionNames.GetNameByEnum(option);
-            var err = Interop.SetOptionPointer(socket, optionName, pointer);
+            var err = Interop.SetOptionPointer(socket, optionName, pointer.ToPointer());
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
@@ -403,16 +407,13 @@ namespace NNGNET
         /// <exception cref="System.Collections.Generic.KeyNotFoundException">
         ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
         /// </exception>
-        public static Span<byte> GetOption(NNGSocket socket, SocketOption option)
+        public static unsafe Span<byte> GetOption(NNGSocket socket, SocketOption option)
         {
             var optionName = OptionNames.GetNameByEnum(option);
             var err = Interop.GetOption(socket, optionName, out var pointer, out var size);
 
             ThrowHelper.ThrowIfNotSuccess(err);
-            unsafe
-            {
-                return new Span<byte>(pointer.ToPointer(), (int)size.ToUInt32());
-            }
+            return new Span<byte>(pointer, (int)size.ToUInt32());
         }
 
         /// <summary>
@@ -611,12 +612,12 @@ namespace NNGNET
         /// <exception cref="System.Collections.Generic.KeyNotFoundException">
         ///     The property is retrieved and <paramref name="option"/> does not exist in the collection.
         /// </exception>
-        public static IntPtr GetOptionPointer(NNGSocket socket, SocketOption option)
+        public static unsafe IntPtr GetOptionPointer(NNGSocket socket, SocketOption option)
         {
             var optionName = OptionNames.GetNameByEnum(option);
             var err = Interop.GetOptionPointer(socket, optionName, out var value);
             ThrowHelper.ThrowIfNotSuccess(err);
-            return value;
+            return new IntPtr(value);
         }
 
         /// <summary>
@@ -670,9 +671,9 @@ namespace NNGNET
         ///     The specified errorCode was something other than <see cref="nng_errno.NNG_SUCCESS"/>. <br/>
         ///     NNG_ECLOSED The <paramref name="socket"/> does not refer to an open socket.
         /// </exception>
-        public static void SetPipeNotification(NNGSocket socket, PipeEvent pipeEvent, PipeCallback callback, IntPtr args = default)
+        public static unsafe void SetPipeNotification(NNGSocket socket, PipeEvent pipeEvent, PipeCallback callback, IntPtr args = default)
         {
-            var err = Interop.PipeSetNotification(socket, pipeEvent, callback, args != default ? args : IntPtr.Zero);
+            var err = Interop.PipeSetNotification(socket, pipeEvent, callback, args != default ? args.ToPointer() : IntPtr.Zero.ToPointer());
             ThrowHelper.ThrowIfNotSuccess(err);
         }
 
@@ -834,7 +835,7 @@ namespace NNGNET
             {
                 fixed (byte* ptr = buffer)
                 {
-                    err = Interop.Send(socket, new IntPtr(ptr), new UIntPtr((uint)buffer.Length), flags);
+                    err = Interop.Send(socket, ptr, new UIntPtr((uint)buffer.Length), flags);
                 }
             }
 
@@ -856,9 +857,10 @@ namespace NNGNET
             nng_errno err;
             unsafe
             {
-                fixed (byte* ptr = targetBuffer)
+                ref var rp = ref targetBuffer.GetPinnableReference();
+                fixed (byte* p = &rp)
                 {
-                    err = Interop.Receive(socket, new IntPtr(ptr), ref size, NNGFlag.None);
+                    err = Interop.Receive(socket, p, ref size, NNGFlag.None);
                 }
             }
 
@@ -868,16 +870,257 @@ namespace NNGNET
 
         public static unsafe Span<byte> Receive(NNGSocket socket)
         {
-            void* pointer;
-            var x = &pointer;
-
-            var ptr = new IntPtr(x);
+            void* ptr = null;
             var size = new UIntPtr();
 
-            var err = Interop.Receive(socket, ptr, ref size, NNGFlag.Alloc);
+            var err = Interop.Receive(socket, ref ptr, ref size, NNGFlag.Alloc);
             ThrowHelper.ThrowIfNotSuccess(err);
 
-            return new Span<byte>(pointer, (int)size.ToUInt32());
+            return new Span<byte>(ptr, (int)size.ToUInt32());
         }
+
+        private sealed unsafe class NanoMem : MemoryManager<byte>
+        {
+            private readonly void* _handle;
+
+            private readonly int _length;
+
+            public NanoMem(void* pointer, UIntPtr size)
+            {
+                _handle = pointer;
+                _length = (int)size.ToUInt32();
+            }
+
+            public NanoMem(void* pointer, int size)
+            {
+                _handle = pointer;
+                _length = size;
+            }
+
+            /// <inheritdoc />
+            protected override void Dispose(bool disposing)
+            {
+                NNG.Free(GetSpan());
+                //Interop.Free(_handle, _length);
+            }
+
+            /// <inheritdoc />
+            public override Span<byte> GetSpan()
+            {
+                return new Span<byte>(_handle, _length);
+            }
+
+            /// <inheritdoc />
+            public override MemoryHandle Pin(int elementIndex = 0)
+            {
+                return new MemoryHandle(Unsafe.Add<byte>(_handle, elementIndex));
+            }
+
+            /// <inheritdoc />
+            public override void Unpin()
+            {
+
+            }
+        }
+
+        public static unsafe void SendMessage(NNGSocket socket, NNGMessage message)
+        {
+            var err = Interop.SendMessage(socket, message.MessageHandle, NNGFlag.None);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        public static unsafe bool TrySendMessage(NNGSocket socket, NNGMessage message)
+        {
+            var err = Interop.SendMessage(socket, message.MessageHandle, NNGFlag.NonBlocking);
+
+            switch (err)
+            {
+                case nng_errno.NNG_SUCCESS:
+                    return true;
+                case nng_errno.NNG_EAGAIN:
+                    return false;
+                default:
+                    throw ThrowHelper.GetExceptionForErrorCode(err);
+            }
+        }
+
+        public static unsafe NNGMessage ReceiveMessage(NNGSocket socket)
+        {
+            nng_msg* ptr = default;
+            var err = Interop.ReceiveMessage(socket, ref ptr, NNGFlag.None);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return new NNGMessage(ptr);
+        }
+
+        public static unsafe bool TryReceiveMessage(NNGSocket socket, out NNGMessage message, bool nonBlocking = false)
+        {
+            nng_msg* ptr = default;
+            var err = Interop.ReceiveMessage(socket, ref ptr, nonBlocking ? NNGFlag.NonBlocking : NNGFlag.None);
+
+            switch (err)
+            {
+                case nng_errno.NNG_SUCCESS:
+                    message = new NNGMessage(ptr);
+                    return true;
+                case nng_errno.NNG_EAGAIN:
+                    message = default;
+                    return false;
+                default:
+                    throw ThrowHelper.GetExceptionForErrorCode(err);
+            }
+        }
+
+        public static void SendAio(NNGSocket socketId, ref nng_aio aio)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void ReceiveAio(NNGSocket socketId, ref nng_aio aio)
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO Context support
+
+        public static Span<byte> Alloc(uint size)
+        {
+            unsafe
+            {
+                var ptr = Interop.Alloc(new UIntPtr(size));
+                return new Span<byte>(ptr, (int)size);
+            }
+        }
+
+        public static unsafe void Free(Span<byte> buffer)
+        {
+            fixed (byte* ptr = buffer)
+            {
+                Interop.Free(ptr, new UIntPtr((uint)buffer.Length));
+            }
+        }
+
+        public static string DuplicateString(string s) => Interop.StringDuplicate(s);
+
+        [Obsolete("Not supported.", true)]
+        public static void FreeString(string s) => throw new NotSupportedException();
+
+        #region AIO
+        // TODO
+        #endregion
+
+        #region Message API
+        // TODO
+        #endregion
+
+        #region Pipe API
+        // TODO
+        #endregion
+
+        #region Statistics
+        // TODO
+        // Note: Statistic support is currently not implemented by NNG itself.
+        #endregion
+
+        public static void Forward(NNGSocket socket1, NNGSocket socket2)
+        {
+            var err = Interop.Device(socket1, socket2);
+            ThrowHelper.ThrowIfNotSuccess(err);
+        }
+
+        #region URL support
+
+        public static unsafe NNGUrl ParseUrl(string address)
+        {
+            nng_url* ptr = default;
+            try
+            {
+                var err = Interop.UrlParse(out ptr, address);
+                ThrowHelper.ThrowIfNotSuccess(err);
+                return new NNGUrl(ptr);
+            }
+            finally
+            {
+                if (ptr != default)
+                {
+                    NNG.FreeUrl(ptr);
+                }
+            }
+        }
+
+        private static unsafe void FreeUrl(nng_url* url) => Interop.UrlFree(url);
+
+        #endregion
+
+        public static unsafe string GetVersionString()
+        {
+            var ptr = Interop.GetVersionUnsafe();
+            return Marshal.PtrToStringAnsi(new IntPtr(ptr));
+        }
+
+        private static Version ConstructVersion(string versionString)
+        {
+            return versionString == null ? null : new Version(versionString);
+        }
+
+        private static readonly Lazy<Version> LazyVersion = new Lazy<Version>(() => ConstructVersion(GetVersionString()));
+
+        public static Version Version => LazyVersion.Value;
+
+        #region Protocols
+
+        private delegate nng_errno SocketOpenFunction(out NNGSocket socket);
+
+        private static NNGSocket OpenSocket(SocketOpenFunction socketOpenFunction)
+        {
+            var err = socketOpenFunction(out var socket);
+            ThrowHelper.ThrowIfNotSuccess(err);
+            return socket;
+        }
+
+        public static NNGSocket OpenReq0() => OpenSocket(Interop.OpenReq0);
+
+        public static NNGSocket OpenReq0Raw() => OpenSocket(Interop.OpenReq0Raw);
+
+        public static NNGSocket OpenRep0() => OpenSocket(Interop.OpenRep0);
+
+        public static NNGSocket OpenRep0Raw() => OpenSocket(Interop.OpenRep0Raw);
+
+        public static NNGSocket OpenSurveyor0() => OpenSocket(Interop.OpenSurveyor0);
+
+        public static NNGSocket OpenSurveyor0Raw() => OpenSocket(Interop.OpenSurveyor0Raw);
+
+        public static NNGSocket OpenRespondent0() => OpenSocket(Interop.OpenRespondent0);
+
+        public static NNGSocket OpenRespondent0Raw() => OpenSocket(Interop.OpenRespondent0Raw);
+
+        public static NNGSocket OpenPub0() => OpenSocket(Interop.OpenPub0);
+
+        public static NNGSocket OpenPub0Raw() => OpenSocket(Interop.OpenPub0Raw);
+
+        public static NNGSocket OpenSub0() => OpenSocket(Interop.OpenSub0);
+
+        public static NNGSocket OpenSub0Raw() => OpenSocket(Interop.OpenSub0Raw);
+
+        public static NNGSocket OpenPush0() => OpenSocket(Interop.OpenPush0);
+
+        public static NNGSocket OpenPush0Raw() => OpenSocket(Interop.OpenPush0Raw);
+
+        public static NNGSocket OpenPull0() => OpenSocket(Interop.OpenPull0);
+
+        public static NNGSocket OpenPull0Raw() => OpenSocket(Interop.OpenPull0Raw);
+
+        public static NNGSocket OpenPair0() => OpenSocket(Interop.OpenPair0);
+
+        public static NNGSocket OpenPair0Raw() => OpenSocket(Interop.OpenPair0Raw);
+
+        public static NNGSocket OpenPair1() => OpenSocket(Interop.OpenPair1);
+
+        public static NNGSocket OpenPair1Raw() => OpenSocket(Interop.OpenPair1Raw);
+
+        public static NNGSocket OpenBus0() => OpenSocket(Interop.OpenBus0);
+
+        public static NNGSocket OpenBus0Raw() => OpenSocket(Interop.OpenBus0Raw);
+
+        #endregion
     }
 }

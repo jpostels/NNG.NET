@@ -2,6 +2,7 @@
 using System.Threading;
 using IntegrationTests.Infrastructure;
 using IntegrationTests.Tests.BasicReqRep;
+using IntegrationTests.Tests.Throughput;
 
 namespace IntegrationTests
 {
@@ -70,6 +71,9 @@ namespace IntegrationTests
                     break;
                 case 2:
                     results = TestRunner.Run<LoopedReqRepTest>();
+                    break;
+                case 3:
+                    results = TestRunner.Run<ThroughputReqRep>();
                     break;
                 default:
                     Console.WriteLine("Unknown test selected. ");
@@ -151,6 +155,7 @@ namespace IntegrationTests
 
             Console.WriteLine("#01: " + nameof(BasicReqRepTest));
             Console.WriteLine("#02: " + nameof(LoopedReqRepTest));
+            Console.WriteLine("#03: " + nameof(ThroughputReqRep));
 
             Console.WriteLine("------------------");
         }
