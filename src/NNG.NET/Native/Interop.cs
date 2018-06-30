@@ -1,4 +1,6 @@
-﻿namespace NNGNET.Native
+﻿using System.Reflection;
+
+namespace NNGNET.Native
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -59,6 +61,7 @@
                 // This makes sure all methods are functioning correctly
                 // NOTE: Does not actually invoke a function call
                 Marshal.PrelinkAll(typeof(Interop));
+
                 IsInitialized = true;
             }
         }
@@ -400,11 +403,8 @@
 
         #region AIO
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void AioAllocCallback(void* ptr);
-
         [DllImport(LibraryName, EntryPoint = "nng_aio_alloc")]
-        public static extern nng_errno AioAlloc([Out, In] ref nng_aio* aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioAllocCallback completionCallback, void* args);
+        public static extern nng_errno AioAlloc(out nng_aio aio, [MarshalAs(UnmanagedType.FunctionPtr)] AioCompletionCallback completionCallback, void* args);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_free")]
         public static extern void AioFree(ref nng_aio aio);
@@ -422,7 +422,7 @@
         public static extern void AioCancel(ref nng_aio aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_abort")]
-        public static extern void AioAbort(ref nng_aio aio, int i);
+        public static extern void AioAbort(ref nng_aio aio, int err);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_wait")]
         public static extern void AioWait(ref nng_aio aio);
@@ -449,7 +449,7 @@
         public static extern void AioSetTimeout(ref nng_aio aio, nng_duration timeout);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_set_iov")]
-        public static extern nng_errno AioSetIoVector(ref nng_aio aio, uint niov, in nng_iov iov);
+        public static extern nng_errno AioSetIoVector(ref nng_aio aio, uint niov, nng_iov* iov);
 
         [DllImport(LibraryName, EntryPoint = "nng_aio_finish")]
         public static extern void AioFinish(ref nng_aio aio, int rv);

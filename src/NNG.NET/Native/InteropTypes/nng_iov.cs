@@ -6,7 +6,7 @@ namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
-    internal unsafe struct nng_iov
+    public unsafe struct nng_iov
     {
         public void* iov_buf;
 
