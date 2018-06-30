@@ -462,7 +462,7 @@
 #region Message API
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_alloc")]
-        public static extern nng_errno MessageAlloc([Out, In] ref nng_msg* msg, UIntPtr size);
+        public static extern nng_errno MessageAlloc(out nng_msg* msg, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_free")]
         public static extern void MessageFree(nng_msg* msg);
@@ -513,10 +513,10 @@
         public static extern nng_errno MessageHeaderInsert(nng_msg* msg, uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_chop_u32")]
-        public static extern nng_errno MessageHeaderChop(nng_msg* msg, ref uint val);
+        public static extern nng_errno MessageHeaderChop(nng_msg* msg, out uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_header_trim_u32")]
-        public static extern nng_errno MessageHeaderTrim(nng_msg* msg, ref uint val);
+        public static extern nng_errno MessageHeaderTrim(nng_msg* msg, out uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_append_u32")]
         public static extern nng_errno MessageAppend(nng_msg* msg, uint val);
@@ -525,13 +525,13 @@
         public static extern nng_errno MessageInsert(nng_msg* msg, uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_chop_u32")]
-        public static extern nng_errno MessageChop(nng_msg* msg, ref uint val);
+        public static extern nng_errno MessageChop(nng_msg* msg, out uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_trim_u32")]
-        public static extern nng_errno MessageTrim(nng_msg* msg, ref uint val);
+        public static extern nng_errno MessageTrim(nng_msg* msg, out uint val);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_dup")]
-        public static extern nng_errno MessageDuplicate(ref nng_msg* msgDuplicate, nng_msg* msgSource);
+        public static extern nng_errno MessageDuplicate(out nng_msg* msgDuplicate, nng_msg* msgSource);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_clear")]
         public static extern void MessageClear(nng_msg* msg);
@@ -546,7 +546,7 @@
         public static extern Pipe MessageGetPipe(nng_msg* msg);
 
         [DllImport(LibraryName, EntryPoint = "nng_msg_getopt")]
-        public static extern nng_errno MessageGetOption(nng_msg* msg, int opt, void* ptr, ref UIntPtr size);
+        public static extern nng_errno MessageGetOption(nng_msg* msg, int opt, out void* ptr, out UIntPtr size);
 
 #endregion
 

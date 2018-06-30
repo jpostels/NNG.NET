@@ -192,8 +192,7 @@ namespace NNGNET.NETTests.Native
         public unsafe void MessageTest()
         {
             const int size = 10;
-            nng_msg* ptr = default;
-            var res = Interop.MessageAlloc(ref ptr, new UIntPtr(size));
+            var res = Interop.MessageAlloc(out var ptr, new UIntPtr(size));
             Assert.Equal(nng_errno.NNG_SUCCESS, res);
 
             var len = Interop.MessageLength(ptr);
@@ -237,8 +236,7 @@ namespace NNGNET.NETTests.Native
         public unsafe void MessageSendTest()
         {
             const int size = 10;
-            nng_msg* ptr = default;
-            var res = Interop.MessageAlloc(ref ptr, new UIntPtr(size));
+            var res = Interop.MessageAlloc(out var ptr, new UIntPtr(size));
             Assert.Equal(nng_errno.NNG_SUCCESS, res);
 
             var len = Interop.MessageLength(ptr);
