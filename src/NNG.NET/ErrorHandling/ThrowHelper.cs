@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using NNGNET.Native;
 using NNGNET.Native.InteropTypes;
@@ -28,14 +29,26 @@ namespace NNGNET.ErrorHandling
         ///     The specified <paramref name="errorCode"/> was something other than <see cref="nng_errno.NNG_SUCCESS"/>
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ThrowIfNotSuccess(nng_errno errorCode)
+        public static void ThrowIfNotSuccess(nng_errno errorCode, [CallerMemberName] string source = null)
         {
             if (errorCode == nng_errno.NNG_SUCCESS)
             {
                 return;
             }
 
-            throw GetExceptionForErrorCode(errorCode);
+            if ((errorCode & nng_errno.NNG_ESYSERR) != 0)
+            {
+                var inner = GetSystemErrorException(((int) errorCode & ~((int) nng_errno.NNG_ESYSERR)));
+                throw new NngException("A system error occured. See inner exception for details. ", inner);
+                //throw GetExceptionForErrorCode("SysError: 0x" + ((int)errorCode & ~((int)nng_errno.NNG_ESYSERR)).ToString("X"), source);
+            }
+
+            throw GetExceptionForErrorCode(errorCode, source: source);
+        }
+
+        private static Win32Exception GetSystemErrorException(int errorCode)
+        {
+            return new Win32Exception(errorCode);
         }
 
         /// <summary>
