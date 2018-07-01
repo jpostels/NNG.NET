@@ -8,9 +8,6 @@ using NNGNET.Native.InteropTypes;
 using Xunit;
 using Xunit.Abstractions;
 
-// ReSharper disable ExceptionNotDocumentedOptional
-// ReSharper disable ExceptionNotDocumented
-
 namespace NNGNET.NETTests.Native
 {
     public class InteropTests : TestOutputBase
