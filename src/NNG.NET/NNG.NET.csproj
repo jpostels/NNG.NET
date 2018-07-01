@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.6.0-preview1-26628-03"></PackageReference>
+    <PackageReference Include="System.Memory" Version="4.5.1"></PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="NNG.NET.Native" Version="1.0.0-Preview" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0-preview1-26628-03" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
   </ItemGroup>
   
 </Project>
