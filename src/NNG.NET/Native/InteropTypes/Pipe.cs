@@ -47,5 +47,66 @@ namespace NNGNET.Native.InteropTypes
         public static bool operator ==(Pipe left, Pipe right) => left.Equals(right);
 
         public static bool operator !=(Pipe left, Pipe right) => !left.Equals(right);
+
+        public Span<byte> GetPipeOption(string optionName)
+        {
+            return NNG.GetPipeOption(this, optionName);
+        }
+
+        public bool GetPipeOptionBool(string optionName)
+        {
+            return NNG.GetPipeOptionBool(this, optionName);
+        }
+
+        public int GetPipeOptionInt32(string optionName)
+        {
+            return NNG.GetPipeOptionInt32(this, optionName);
+        }
+
+        public TimeSpan GetPipeOptionTimeSpan(string optionName)
+        {
+            return NNG.GetPipeOptionTimeSpan(this, optionName);
+        }
+
+        public UIntPtr GetPipeOptionSize(string optionName)
+        {
+            return NNG.GetPipeOptionSize(this, optionName);
+        }
+
+        public nng_sockaddr GetPipeOptionAddress(string optionName)
+        {
+            return NNG.GetPipeOptionAddress(this, optionName);
+        }
+
+        public ulong GetPipeOptionUInt64(string optionName)
+        {
+            return NNG.GetPipeOptionUInt64(this, optionName);
+        }
+
+        public IntPtr GetPipeOptionPointer(string optionName)
+        {
+            return NNG.GetPipeOptionPointer(this, optionName);
+        }
+
+        public string GetPipeOptionString(string optionName)
+        {
+            return NNG.GetPipeOptionString(this, optionName);
+        }
+
+        public void Close()
+        {
+            NNG.ClosePipe(this);
+        }
+
+        public int GetId()
+        {
+            return NNG.GetPipeId(this);
+        }
+
+        public NNGSocket Socket => NNG.GetPipeSocket(this);
+
+        public Dialer Dialer => NNG.GetPipeDialer(this);
+
+        public Listener Listener => NNG.GetPipeListener(this);
     }
 }

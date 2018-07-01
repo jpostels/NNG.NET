@@ -314,10 +314,6 @@
         [Obsolete("Not supported.", true)]
         public static void FreeString(string s) => throw new NotSupportedException();
 
-        #region Pipe API
-        // TODO
-        #endregion
-
         #region Statistics
         // TODO
         // Note: Statistic support is currently not implemented by NNG itself.
@@ -328,8 +324,6 @@
             var err = Interop.Device(socket1, socket2);
             ThrowHelper.ThrowIfNotSuccess(err);
         }
-
-        #region URL support
 
         public static unsafe NNGUrl ParseUrl(string address)
         {
@@ -351,10 +345,6 @@
 
         private static unsafe void FreeUrl(nng_url* url) => Interop.UrlFree(url);
 
-        #endregion
-
-        #region Version
-
         public static unsafe string GetVersionString()
         {
             var ptr = Interop.GetVersionUnsafe();
@@ -369,7 +359,5 @@
         private static readonly Lazy<Version> LazyVersion = new Lazy<Version>(() => ConstructVersion(GetVersionString()));
 
         public static Version Version => LazyVersion.Value;
-
-        #endregion
     }
 }
