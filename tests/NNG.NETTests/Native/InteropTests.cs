@@ -96,7 +96,7 @@ namespace NNGNET.NETTests.Native
             Interop.Initialize();
 
             NNGSocket nngSocket;
-            nngSocket.Id = 2;
+            nngSocket.Id = 2222222212;
             var res = Interop.Close(nngSocket);
             Print("HRESULT: 0x" + ((int)res).ToString("X8"));
             Print("FLAG: " + res.ToString("G"));

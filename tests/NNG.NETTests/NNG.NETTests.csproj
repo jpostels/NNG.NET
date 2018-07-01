@@ -28,4 +28,10 @@
     <ProjectReference Include="..\..\src\NNG.NET\NNG.NET.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="NNG.NETTests.xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
