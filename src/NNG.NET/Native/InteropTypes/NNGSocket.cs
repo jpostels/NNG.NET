@@ -15,12 +15,12 @@ namespace NNGNET.Native.InteropTypes
     ///     Original name: nng_socket
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct NNGSocket : IEquatable<NNGSocket>
+    public readonly struct NNGSocket : IEquatable<NNGSocket>
     {
         /// <summary>
         ///     The identifier
         /// </summary>
-        public uint Id;
+        public readonly uint Id;
 
         /// <inheritdoc />
         public bool Equals(NNGSocket other) => Id == other.Id;

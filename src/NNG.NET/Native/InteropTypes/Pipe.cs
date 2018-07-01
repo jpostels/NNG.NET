@@ -20,12 +20,12 @@ namespace NNGNET.Native.InteropTypes
     /// </remarks>
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
-    public struct Pipe : IEquatable<Pipe>
+    public readonly struct Pipe : IEquatable<Pipe>
     {
         /// <summary>
         ///     The identifier
         /// </summary>
-        public uint Id;
+        public readonly uint Id;
 
         /// <inheritdoc />
         public bool Equals(Pipe other) => Id == other.Id;

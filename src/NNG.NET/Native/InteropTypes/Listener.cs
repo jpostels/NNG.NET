@@ -10,12 +10,12 @@ namespace NNGNET.Native.InteropTypes
     ///     much like an HTTP server can have many connections to multiple clients simultaneously.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Listener : IEquatable<Listener>
+    public readonly struct Listener : IEquatable<Listener>
     {
         /// <summary>
         ///     The identifier
         /// </summary>
-        public uint Id;
+        public readonly uint Id;
 
         /// <inheritdoc />
         public bool Equals(Listener other) => Id == other.Id;
