@@ -292,8 +292,6 @@
             }
         }
 
-        // TODO Context support
-
         public static Span<byte> Alloc(uint size)
         {
             unsafe

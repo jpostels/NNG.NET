@@ -339,49 +339,49 @@ namespace NNGNET.Native
 #region Context support
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_open")]
-        public static extern nng_errno ContextOpen([Out, In] ref nng_ctx ctx, NNGSocket socket);
+        public static extern nng_errno ContextOpen(out NNGContext context, NNGSocket socket);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_close")]
-        public static extern nng_errno ContextClose(nng_ctx ctx);
+        public static extern nng_errno ContextClose(NNGContext context);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_id")]
-        public static extern int GetContextId(nng_ctx ctx);
+        public static extern int GetContextId(NNGContext context);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_recv")]
-        public static extern void ContextReceive(nng_ctx ctx, nng_aio* aio);
+        public static extern void ContextReceive(NNGContext context, nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_send")]
-        public static extern void ContextSend(nng_ctx ctx, nng_aio* aio);
+        public static extern void ContextSend(NNGContext context, nng_aio* aio);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_getopt")]
-        public static extern nng_errno ContextGetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* value, out UIntPtr size);
+        public static extern nng_errno ContextGetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* value, out UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_getopt_bool")]
-        public static extern nng_errno ContextGetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
+        public static extern nng_errno ContextGetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, out bool value);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_getopt_int")]
-        public static extern nng_errno ContextGetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
+        public static extern nng_errno ContextGetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, out int value);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_getopt_ms")]
-        public static extern nng_errno ContextGetOptionDuration(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
+        public static extern nng_errno ContextGetOptionDuration(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, out nng_duration duration);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_getopt_size")]
-        public static extern nng_errno ContextGetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* value);
+        public static extern nng_errno ContextGetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, out void* value);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_setopt")]
-        public static extern nng_errno ContextSetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, ref void* value, UIntPtr size);
+        public static extern nng_errno ContextSetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, void* value, UIntPtr size);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_setopt_bool")]
-        public static extern nng_errno ContextSetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
+        public static extern nng_errno ContextSetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, bool value);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_setopt_int")]
-        public static extern nng_errno ContextSetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
+        public static extern nng_errno ContextSetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, int value);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_setopt_ms")]
-        public static extern nng_errno ContextSetOptionDuration(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration duration);
+        public static extern nng_errno ContextSetOptionDuration(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, nng_duration duration);
 
         [DllImport(LibraryName, EntryPoint = "nng_ctx_setopt_size")]
-        public static extern nng_errno ContextSetOption(nng_ctx ctx, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
+        public static extern nng_errno ContextSetOption(NNGContext context, [MarshalAs(UnmanagedType.LPStr)] string optionName, UIntPtr value);
 
 #endregion
 

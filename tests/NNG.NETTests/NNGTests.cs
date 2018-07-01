@@ -83,6 +83,18 @@ namespace NNGNETTests
         }
 
         [Fact]
+        public void OpenContext_ShouldReturnValidValue()
+        {
+            var socket = NNG.OpenReq0();
+
+            var context = NNG.OpenContext(socket);
+            Assert.NotEqual(new NNGContext(), context);
+
+            NNG.CloseContext(context);
+            NNG.Close(socket);
+        }
+
+        [Fact]
         public void OpenReq0_ShouldReturnValidSocket() => TestSocketOpenFunction(NNG.OpenReq0);
 
         [Fact]
