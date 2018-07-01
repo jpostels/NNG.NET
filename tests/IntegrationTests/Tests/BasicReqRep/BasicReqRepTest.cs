@@ -11,7 +11,11 @@ namespace IntegrationTests.Tests.BasicReqRep
     {
         private const int MessageSize = 100;
 
-        private const string PipeName = "ipc://" + nameof(BasicReqRepTest);
+        private const string PipeName = "inproc://" + nameof(BasicReqRepTest);
+
+        //private const string PipeName = "ipc:///tmp/" + nameof(BasicReqRepTest);
+
+        private static long _cnt = 1;
 
         private bool IsDone { get; set; }
 
@@ -31,6 +35,7 @@ namespace IntegrationTests.Tests.BasicReqRep
             }
 
             NNG.CloseAll();
+            _cnt++;
         }
 
         private void CreateReplySocket()
@@ -43,14 +48,14 @@ namespace IntegrationTests.Tests.BasicReqRep
         {
             using (var rep = new ReplySocket())
             {
-                var listener = NNG.Listen(rep.Socket, PipeName);
+                var listener = NNG.Listen(rep.Socket, PipeName + _cnt + ".ipc");
 
                 var received = NNG.Receive(rep.Socket);
-                //Console.WriteLine("server received: " + received[0].ToString());
+                Console.WriteLine("server received: " + received[0].ToString());
                 received[0]++;
                 NNG.Send(rep.Socket, received, false, true);
 
-                NNG.CloseListener(listener);
+                //NNG.CloseListener(listener);
                 ReplyIsDone = true;
             }
         }
@@ -68,24 +73,24 @@ namespace IntegrationTests.Tests.BasicReqRep
         {
             using (var req = new RequestSocket())
             {
-                var dialer = NNG.Dial(req.Socket, PipeName);
+                var dialer = NNG.Dial(req.Socket, PipeName + _cnt + ".ipc");
 
                 var ptr = stackalloc byte[MessageSize];
                 var sp = new Span<byte>(ptr, MessageSize);
                 _random.NextBytes(sp);
 
-                //Console.WriteLine("sending: " + sp[0]);
+                Console.WriteLine("sending: " + sp[0]);
 
                 var res = NNG.Send(req.Socket, sp);
                 Debug.Assert(res);
 
                 var received = NNG.Receive(req.Socket);
 
-                //Console.WriteLine("received: " + received[0]);
+                Console.WriteLine("received: " + received[0]);
                 Debug.Assert((sp[0] + 1) % 256 == received[0], "(sp[0] + 1) % 256 == received[0]");
 
                 NNG.Free(received);
-                NNG.CloseDialer(dialer);
+                //NNG.CloseDialer(dialer);
                 IsDone = true;
             }
         }

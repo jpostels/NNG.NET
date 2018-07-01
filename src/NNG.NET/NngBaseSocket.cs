@@ -31,7 +31,7 @@ namespace NNGNET
         /// <value>
         ///     The socket.
         /// </value>
-        internal NNGSocket Socket { get; set; }
+        public NNGSocket Socket { get; private set; }
 
         /// <summary>
         ///     A socket opener function e.g. <see cref="Interop.nng_req0_open"/>.

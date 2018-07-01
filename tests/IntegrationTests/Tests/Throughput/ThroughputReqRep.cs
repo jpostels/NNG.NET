@@ -14,7 +14,7 @@ namespace IntegrationTests.Tests.Throughput
         public const long NumberOfMessages = 50_000;
 
         private const string PipeName = "inproc://" + nameof(ThroughputReqRep);
-        //private const string PipeName = "tcp://localhost";
+        //private const string PipeName = "ipc:///tmp/" + nameof(ThroughputReqRep);
 
         private bool IsDone { get; set; }
 
