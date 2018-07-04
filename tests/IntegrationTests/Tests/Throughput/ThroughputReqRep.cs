@@ -13,8 +13,8 @@ namespace IntegrationTests.Tests.Throughput
 
         public const long NumberOfMessages = 50_000;
 
-        private const string PipeName = "inproc://" + nameof(ThroughputReqRep);
-        //private const string PipeName = "ipc:///tmp/" + nameof(ThroughputReqRep);
+        //private const string PipeName = "inproc://" + nameof(ThroughputReqRep);
+        private const string PipeName = "ipc:///tmp/" + nameof(ThroughputReqRep);
 
         private bool IsDone { get; set; }
 
@@ -57,10 +57,12 @@ namespace IntegrationTests.Tests.Throughput
 
                 sw.Stop();
 
-                NNG.CloseListener(listener);
+                //NNG.CloseListener(listener);
                 Console.WriteLine($"Rep: {sw.ElapsedMilliseconds:N0}ms");
                 Console.WriteLine($"Rate: {NumberOfMessages * MsgSize / TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).TotalSeconds:N0} b/s");
                 ReplyIsDone = true;
+
+                Thread.Sleep(1);
             }
         }
 
@@ -93,10 +95,12 @@ namespace IntegrationTests.Tests.Throughput
 
                 sw.Stop();
 
-                NNG.CloseDialer(dialer);
+                //NNG.CloseDialer(dialer);
                 Console.WriteLine($"Req: {sw.ElapsedMilliseconds:N0}ms");
                 Console.WriteLine($"Rate: {NumberOfMessages * MsgSize / TimeSpan.FromMilliseconds(sw.ElapsedMilliseconds).TotalSeconds:N0} b/s");
                 IsDone = true;
+
+                Thread.Sleep(1);
             }
         }
     }

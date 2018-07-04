@@ -21,6 +21,8 @@ namespace IntegrationTests.Tests.BasicReqRep
 
         private bool ReplyIsDone { get; set; }
 
+        private readonly object _dialListenLock = new object();
+
         /// <inheritdoc />
         public override void Run()
         {
@@ -40,15 +42,20 @@ namespace IntegrationTests.Tests.BasicReqRep
 
         private void CreateReplySocket()
         {
-            var thr = new Thread(Reply) { Name = "ReplyThread" };
+            var thr = new Thread(Reply) { Name = "ReplyThread" + _cnt };
             thr.Start();
         }
 
         private void Reply()
         {
+            Debug.WriteLine($"[{_cnt}] Spawn reply thread {Thread.CurrentThread.ManagedThreadId}");
+
             using (var rep = new ReplySocket())
             {
-                var listener = NNG.Listen(rep.Socket, PipeName + _cnt + ".ipc");
+                lock (_dialListenLock)
+                {
+                    var listener = NNG.Listen(rep.Socket, PipeName + _cnt + ".ipc");
+                }
 
                 var received = NNG.Receive(rep.Socket);
                 Console.WriteLine("server received: " + received[0].ToString());
@@ -57,13 +64,17 @@ namespace IntegrationTests.Tests.BasicReqRep
 
                 //NNG.CloseListener(listener);
                 ReplyIsDone = true;
+
+                Thread.Sleep(5);
             }
+
+            Debug.WriteLine($"[{_cnt}] Exit reply thread " + Thread.CurrentThread.ManagedThreadId);
         }
 
         private void CreateRequestSocket()
         {
             Thread.Sleep(10);
-            var thr = new Thread(Request) { Name = "RequestThread" };
+            var thr = new Thread(Request) { Name = "RequestThread" + _cnt};
             thr.Start();
         }
 
@@ -71,9 +82,14 @@ namespace IntegrationTests.Tests.BasicReqRep
 
         private unsafe void Request(object obj)
         {
+            Debug.WriteLine($"[{_cnt}] Spawn request thread {Thread.CurrentThread.ManagedThreadId}");
+
             using (var req = new RequestSocket())
             {
-                var dialer = NNG.Dial(req.Socket, PipeName + _cnt + ".ipc");
+                lock (_dialListenLock)
+                {
+                    var dialer = NNG.Dial(req.Socket, PipeName + _cnt + ".ipc");
+                }
 
                 var ptr = stackalloc byte[MessageSize];
                 var sp = new Span<byte>(ptr, MessageSize);
@@ -93,6 +109,8 @@ namespace IntegrationTests.Tests.BasicReqRep
                 //NNG.CloseDialer(dialer);
                 IsDone = true;
             }
+
+            Debug.WriteLine($"[{_cnt}] Exit request thread {Thread.CurrentThread.ManagedThreadId}");
         }
     }
 }
