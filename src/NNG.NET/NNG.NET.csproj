@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>	
+    <TargetFrameworks>netcoreapp2.2;netcoreapp2.1;netstandard2.0</TargetFrameworks>	
     <Version>0.2.1</Version>
     <RootNamespace>NNGNET</RootNamespace>
   </PropertyGroup>
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.1"></PackageReference>
+    <PackageReference Include="System.Memory" Version="4.5.2"></PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="NNG.NET.Native" Version="1.0.0-Preview" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
   
 </Project>
