@@ -18,7 +18,9 @@ branches:
     - /hotfix\/.*/
     - /release\/.*/
 
-configuration: Release
+configuration: 
+    - Release
+    - Debug
 
 test:
 # only assemblies to test

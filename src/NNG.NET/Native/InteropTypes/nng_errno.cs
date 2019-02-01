@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     /// <summary>
     ///     Error codes.  These generally have different values from UNIX errnos,

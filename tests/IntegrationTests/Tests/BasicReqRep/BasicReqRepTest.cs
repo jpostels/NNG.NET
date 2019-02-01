@@ -1,23 +1,33 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
 using System.Threading;
 using IntegrationTests.Infrastructure;
-using NNG.ErrorHandling;
-using NNG.Native;
-using NNG.Native.InteropTypes;
-using NNG.Protocols;
+using NNGNET;
+using NNGNET.Protocols;
 
 namespace IntegrationTests.Tests.BasicReqRep
 {
     public class BasicReqRepTest : TestBase
     {
+        private const int MessageSize = 100;
+
         private const string PipeName = "inproc://" + nameof(BasicReqRepTest);
 
+        //private const string PipeName = "ipc:///tmp/" + nameof(BasicReqRepTest);
+
+        private static long _cnt = 1;
+
         private bool IsDone { get; set; }
+
+        private bool ReplyIsDone { get; set; }
+
+        private readonly object _dialListenLock = new object();
 
         /// <inheritdoc />
         public override void Run()
         {
+            NNG.Initialize();
+
             CreateReplySocket();
             CreateRequestSocket();
 
@@ -26,78 +36,81 @@ namespace IntegrationTests.Tests.BasicReqRep
                 Thread.Sleep(10);
             }
 
-            Interop.nng_closeall();
+            NNG.CloseAll();
+            _cnt++;
         }
 
         private void CreateReplySocket()
         {
-            var thr = new Thread(Reply) { Name = "ReplyThread" };
+            var thr = new Thread(Reply) { Name = "ReplyThread" + _cnt };
             thr.Start();
         }
 
-        private unsafe void Reply()
+        private void Reply()
         {
+            Debug.WriteLine($"[{_cnt}] Spawn reply thread {Thread.CurrentThread.ManagedThreadId}");
+
             using (var rep = new ReplySocket())
             {
-                var res = Interop.nng_listen(rep.Socket, PipeName, out var listener, nng_flag.NONE);
-                AssertResult(res);
+                lock (_dialListenLock)
+                {
+                    var listener = NNG.Listen(rep.Socket, PipeName + _cnt + ".ipc");
+                }
 
-                var buf = IntPtr.Zero;
-                var size = UIntPtr.Zero;
-                res = Interop.nng_recv(rep.Socket, ref buf, ref size, nng_flag.NNG_FLAG_ALLOC);
-                AssertResult(res);
+                var received = NNG.Receive(rep.Socket);
+                Console.WriteLine("server received: " + received[0].ToString());
+                received[0]++;
+                NNG.Send(rep.Socket, received, false, true);
 
-                Console.WriteLine("received: " + ((byte*)buf.ToPointer())[0].ToString());
-                ((byte*)buf.ToPointer())[0]++;
+                //NNG.CloseListener(listener);
+                ReplyIsDone = true;
 
-                res = Interop.nng_send(rep.Socket, buf, size, nng_flag.NNG_FLAG_ALLOC);
-                AssertResult(res);
+                Thread.Sleep(5);
             }
+
+            Debug.WriteLine($"[{_cnt}] Exit reply thread " + Thread.CurrentThread.ManagedThreadId);
         }
 
         private void CreateRequestSocket()
         {
             Thread.Sleep(10);
-            var thr = new Thread(Request) { Name = "RequestThread" };
+            var thr = new Thread(Request) { Name = "RequestThread" + _cnt};
             thr.Start();
         }
 
+        private readonly Random _random = new Random(DateTime.Now.Millisecond);
+
         private unsafe void Request(object obj)
         {
+            Debug.WriteLine($"[{_cnt}] Spawn request thread {Thread.CurrentThread.ManagedThreadId}");
+
             using (var req = new RequestSocket())
             {
-                var res = Interop.nng_dial(req.Socket, PipeName, out var dialer, nng_flag.NONE);
-                AssertResult(res);
+                lock (_dialListenLock)
+                {
+                    var dialer = NNG.Dial(req.Socket, PipeName + _cnt + ".ipc");
+                }
 
-                var ptr = Marshal.AllocHGlobal(1);
-                var size = new UIntPtr(1);
+                var ptr = stackalloc byte[MessageSize];
+                var sp = new Span<byte>(ptr, MessageSize);
+                _random.NextBytes(sp);
 
-                Console.WriteLine("sending: " + ((byte*)ptr.ToPointer())[0].ToString());
+                Console.WriteLine("sending: " + sp[0]);
 
-                res = Interop.nng_send(req.Socket, ptr, size, nng_flag.NONE);
-                AssertResult(res);
+                var res = NNG.Send(req.Socket, sp);
+                Debug.Assert(res);
 
-                Marshal.FreeHGlobal(ptr);
+                var received = NNG.Receive(req.Socket);
 
-                res = Interop.nng_recv(req.Socket, ref ptr, ref size, nng_flag.NNG_FLAG_ALLOC);
-                AssertResult(res);
+                Console.WriteLine("received: " + received[0]);
+                Debug.Assert((sp[0] + 1) % 256 == received[0], "(sp[0] + 1) % 256 == received[0]");
 
-                Console.WriteLine("received: " + ((byte*)ptr.ToPointer())[0].ToString());
-
-                Interop.nng_free(ptr, size);
-
+                NNG.Free(received);
+                //NNG.CloseDialer(dialer);
                 IsDone = true;
             }
-        }
 
-        private static void AssertResult(int errorCode)
-        {
-            if (errorCode == 0)
-            {
-                return;
-            }
-
-            ThrowHelper.Throw(errorCode);
+            Debug.WriteLine($"[{_cnt}] Exit request thread {Thread.CurrentThread.ManagedThreadId}");
         }
     }
 }

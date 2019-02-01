@@ -12,7 +12,6 @@ namespace IntegrationTests.Tests.BasicReqRep
             {
                 var t = new BasicReqRepTest();
                 t.Run();
-                
                 Thread.Sleep(5);
             }
         }

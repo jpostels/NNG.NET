@@ -2,11 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct nni_chunk
+    internal unsafe struct nni_chunk
     {
         public UIntPtr ch_cap;
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class PullSocket : NngBaseSocket
     {
-        public PullSocket() : base(Interop.nng_pull0_open)
+        public PullSocket() : base(Interop.OpenPull0)
         {
         }
     }

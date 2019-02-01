@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\src\NNG.NET\NNG.NET.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
+    <PackageReference Include="System.Memory" Version="4.5.0"></PackageReference>
+  </ItemGroup>
+
 </Project>

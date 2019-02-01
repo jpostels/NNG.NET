@@ -1,9 +1,9 @@
 ﻿using System;
-using NNG.ErrorHandling;
-using NNG.Native;
-using NNG.Native.InteropTypes;
+using NNGNET.ErrorHandling;
+using NNGNET.Native;
+using NNGNET.Native.InteropTypes;
 
-namespace NNG
+namespace NNGNET
 {
     /// <summary>
     ///     Base class for shared functionality between protocols.
@@ -31,14 +31,14 @@ namespace NNG
         /// <value>
         ///     The socket.
         /// </value>
-        internal nng_socket Socket { get; set; }
+        public NNGSocket Socket { get; private set; }
 
         /// <summary>
         ///     A socket opener function e.g. <see cref="Interop.nng_req0_open"/>.
         /// </summary>
         /// <param name="socket">The socket.</param>
         /// <returns></returns>
-        internal delegate int SocketOpenFunction(out nng_socket socket);
+        internal delegate nng_errno SocketOpenFunction(out NNGSocket socket);
 
         /// <summary>
         ///     Opens a socket with the specified <paramref name="openFunction"/>
@@ -51,8 +51,8 @@ namespace NNG
         /// </exception>
         internal void Open(SocketOpenFunction openFunction)
         {
-            int result;
-            nng_socket socket;
+            nng_errno result;
+            NNGSocket socket;
             try
             {
                 lock (SocketCreationLock)
@@ -65,22 +65,22 @@ namespace NNG
                 throw new NngException("Failed to call socket open function. See inner exception for more details. ", exception);
             }
 
-            if (result == (int) nng_errno.NNG_SUCCESS)
+            if (result == nng_errno.NNG_SUCCESS)
             {
                 Socket = socket;
             }
             else
             {
-                ThrowHelper.Throw(result);
+                throw ThrowHelper.GetExceptionForErrorCode(result);
             }
         }
 
         /// <summary>
         ///     Closes the underlying socket.
         /// </summary>
-        internal int Close()
+        internal nng_errno Close()
         {
-            return Interop.nng_close(Socket);
+            return Interop.Close(Socket);
         }
 
         /// <summary>

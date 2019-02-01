@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace NNG.Native.InteropTypes
+namespace NNGNET.Native.InteropTypes
 {
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Using native name")]
     [StructLayout(LayoutKind.Sequential)]
-    public struct nni_list_node
+    internal unsafe struct nni_list_node
     {
-        // TODO
+        internal nni_list_node* ln_next;
+
+        internal nni_list_node* ln_prev;
     }
 }

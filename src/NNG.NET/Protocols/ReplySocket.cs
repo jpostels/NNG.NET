@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class ReplySocket : NngBaseSocket
     {
-        public ReplySocket() : base(Interop.nng_rep0_open)
+        public ReplySocket() : base(Interop.OpenRep0)
         {
         }
     }

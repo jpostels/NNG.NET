@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using IntegrationTests.Infrastructure;
 using IntegrationTests.Tests.BasicReqRep;
+using IntegrationTests.Tests.Throughput;
 
 namespace IntegrationTests
 {
@@ -13,9 +15,9 @@ namespace IntegrationTests
         {
             while (true)
             {
-                PrintTestList();
+                var numberOfTests = PrintTestList();
 
-                var continueTests = SelectAndRunTest();
+                var continueTests = SelectAndRunTest(numberOfTests);
 
                 if (!continueTests)
                 {
@@ -30,7 +32,7 @@ namespace IntegrationTests
             Console.WriteLine("Exiting... ");
         }
 
-        private static bool SelectAndRunTest()
+        private static bool SelectAndRunTest(int numberOfTests)
         {
             int? input = null;
 
@@ -39,35 +41,51 @@ namespace IntegrationTests
                 Console.WriteLine("Please select a test to run: ");
                 var line = Console.ReadLine();
 
-                if (line.Contains("exit", StringComparison.InvariantCultureIgnoreCase))
+                if (line.Contains("exit"
+#if !NET47
+                    , StringComparison.InvariantCultureIgnoreCase
+#endif
+                    ))
                 {
                     return false;
                 }
 
+#if NET47
+                if (!int.TryParse(line.Trim(), out var parsed))
+                {
+                    Console.WriteLine("Invalid value: " + line);
+                }
+#else
                 if (!int.TryParse((ReadOnlySpan<char>) line.Trim(), out var parsed))
                 {
                     Console.WriteLine("Invalid value: " + line);
                 }
-
+#endif
                 input = parsed;
             }
 
-            TestResults results;
-            switch (input.Value)
+            var tests = TestBase.GetLocalTestTypes().OrderBy(t => t.Name);
+
+            if (input.Value > 0 && input.Value < tests.Count())
             {
-                case 1:
-                    results = TestRunner.Run<BasicReqRepTest>();
-                    break;
-                case 2:
-                    results = TestRunner.Run<LoopedReqRepTest>();
-                    break;
-                default:
+                var testType = tests.Skip(input.Value - 1).FirstOrDefault();
+                if (testType != null)
+                {
+                    var result = TestRunner.Run(testType);
+                    AnalyzeResults(result);
+                    return true;
+                }
+                else
+                {
                     Console.WriteLine("Unknown test selected. ");
                     return true;
+                }
             }
-
-            AnalyzeResults(results);
-            return true;
+            else
+            {
+                Console.WriteLine("Unknown test selected. ");
+                return true;
+            }
         }
 
         private static void AnalyzeResults(TestResults results)
@@ -135,14 +153,20 @@ namespace IntegrationTests
             }
         }
 
-        private static void PrintTestList()
+        private static int PrintTestList()
         {
             Console.WriteLine("Available tests: ");
 
-            Console.WriteLine("#01: " + nameof(BasicReqRepTest));
-            Console.WriteLine("#02: " + nameof(LoopedReqRepTest));
+            var cnt = 0;
+            foreach (var testType in TestBase.GetLocalTestTypes().OrderBy(t => t.Name))
+            {
+                Console.WriteLine($"{cnt + 1:D2}: {testType.Name}");
+                cnt++;
+            }
 
             Console.WriteLine("------------------");
+
+            return cnt;
         }
     }
 }

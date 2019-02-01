@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class RequestSocket : NngBaseSocket
     {
         internal const string NNG_OPT_REQ_RESENDTIME = "req:resend-time";
 
-        public RequestSocket() : base(Interop.nng_req0_open)
+        public RequestSocket() : base(Interop.OpenReq0)
         {
         }
     }

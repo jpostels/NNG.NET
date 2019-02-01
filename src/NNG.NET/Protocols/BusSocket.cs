@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class BusSocket : NngBaseSocket
     {
-        public BusSocket() : base(Interop.nng_bus0_open)
+        public BusSocket() : base(Interop.OpenBus0)
         {
         }
     }

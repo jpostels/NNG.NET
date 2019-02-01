@@ -16,7 +16,29 @@ namespace IntegrationTests.Infrastructure
         /// </returns>
         public static TestResults Run<TIntegrationTest>() where TIntegrationTest : TestBase, new()
         {
-            var test = Activator.CreateInstance<TIntegrationTest>();
+            var test = TestBase.CreateInstance<TIntegrationTest>();
+            try
+            {
+                test.Run();
+            }
+            // ReSharper disable once CatchAllClause
+            catch (Exception exception)
+            {
+                return new TestResults(Result.Failure, exception);
+            }
+
+            return new TestResults(Result.Success);
+        }
+
+        /// <summary>
+        ///     Runs the test specified by <paramref name="testType"/>.
+        /// </summary>
+        /// <returns>
+        ///     The test results.
+        /// </returns>
+        public static TestResults Run(Type testType)
+        {
+            var test = TestBase.CreateInstance(testType);
             try
             {
                 test.Run();

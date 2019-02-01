@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NNG.Native;
+using NNGNET.Native;
 
-namespace NNG.Protocols
+namespace NNGNET.Protocols
 {
     public class SurveyorSocket : NngBaseSocket
     {
         internal const string NNG_OPT_SURVEYOR_SURVEYTIME = "surveyor:survey-time";
 
-        public SurveyorSocket() : base(Interop.nng_surveyor0_open)
+        public SurveyorSocket() : base(Interop.OpenSurveyor0)
         {
         }
     }

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>	
+    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>	
     <Version>0.2.1</Version>
-    <RootNamespace>NNG</RootNamespace>
+    <RootNamespace>NNGNET</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,12 +11,24 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" Version="4.5.1"></PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="NNG.NET.csproj.DotSettings" />
+  </ItemGroup>
+  
+  <!--File nestings-->
+  <ItemGroup>
+    <Compile Update="NNG.*.cs">
+      <DependentUpon>NNG.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NNG.NET.Native" Version="1.0.0-Preview" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
   </ItemGroup>
   
 </Project>

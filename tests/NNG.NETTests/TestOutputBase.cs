@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit.Abstractions;
 
-namespace NNG.NETTests
+namespace NNGNET.NETTests
 {
     public abstract class TestOutputBase
     {
